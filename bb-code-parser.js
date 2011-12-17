@@ -150,7 +150,7 @@
 		},
 		htmlspecialchars: function(value) {
 			if(!value) return "";
-			return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot").replace(/'/g, "&#039");
+			return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 		}
 	}
 
@@ -1014,7 +1014,7 @@
 				if(argument) box+= ' by ' + PHPC.htmlspecialchars(argument);
 				box += '</div>';
 				box += '<div ';
-				if(argument) box += 'class="' + PHPC.htmlspecialchars(str_replace('{by}', argument, settings['QuoteCSSClassName'])) + '" ';
+				if(argument) box += 'class="' + PHPC.htmlspecialchars(settings['QuoteCSSClassName'].replace('{by}', argument));
 				box += 'style="overflow-x: auto; padding: .25em">';
 				return box;
 			}
@@ -1135,8 +1135,12 @@
 			return (closingCode === null)? '<img src="' : '';
 		}
 		this.close = function(settings, argument, closingCode) {
+			var args = (argument)? argument.split('x') : undefined;
 			if(closingCode === undefined) closingCode = null;
-			return (closingCode === null)? '" alt="image" style="width: ' + PHPC.intval(args[0]) + '; height: ' + PHPC.intval(args[1]) + '"' + ((settings['XHTML'])? '/>' : '>') : '';
+			if(closingCode === null) {
+				return '" alt="image"' + ((argument)? ' style="width: ' + PHPC.intval(args[0]) + '; height: ' + PHPC.intval(args[1]) + '"' : '') + ((settings['XHTML'])? '/>' : '>');
+			}
+			return '';
 		}
 	}
 	HTMLImageBBCode.prototype = new BBCode;

@@ -1076,7 +1076,11 @@
 			return ($closingCode === null)? '<img src="' : '';
 		}
 		public function close($settings, $argument=null, $closingCode=null) {
-			return ($closingCode === null)? '" alt="image" style="width: '.intval($args[0]).'; height: '.intval($args[1]).'"'.(($settings['XHTML'])? '/>' : '>') : '';
+			$args = ($argument !== null)? explode('x', $argument) : null;
+			if($closingCode === null) {
+				return '" alt="image"'.(($argument !== null)? ' style="width: '.intval($args[0]).'; height: '.intval($args[1]).'"' : '').(($settings['XHTML'])? '/>' : '>') : 
+			}
+			return '';
 		}
 	}
 
