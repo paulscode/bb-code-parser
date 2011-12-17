@@ -1105,7 +1105,7 @@
 		this.isValidParent = function(settings, parent) { return true; }
 		this.escape = function(settings, content) { return PHPC.htmlspecialchars(content); }
 		this.open = function(settings, argument, closingCode) {
-			var decoration = (settings['LinkUnderline'])? 'underline' : 'none';
+			var decoration = (!BBCodeParser.isValidKey(settings, 'LinkUnderline') || settings['LinkUnderline'])? 'underline' : 'none';
 			return '<a style="text-decoration: ' + decoration + '; color: ' + PHPC.htmlspecialchars(settings['LinkColor']) + '" href="' + PHPC.htmlspecialchars(argument) + '">';
 		}
 		this.close = function(settings, argument, closingCode) {
