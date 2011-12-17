@@ -1,0 +1,63 @@
+<html>
+	<head>
+		<title>BB-Code Parser Test</title>
+		<script src="bb-code-parser.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		<!--
+
+			function HTMLSmilieBBCode() {
+				this.getCodeName = function() { return 'Smilie'; }
+				this.getDisplayName = function() { return 'smile'; }
+				this.needsEnd = function() { return false; }
+				this.canHaveCodeContent = function() { return true; }
+				this.canHaveArgument = function() { return false; }
+				this.mustHaveArgument = function() { return false; }
+				this.getAutoCloseCodeOnOpen = function() { return 'smile'; }
+				this.getAutoCloseCodeOnClose = function() { return null; }
+				this.isValidArgument = function(settings, argument) { return false; }
+				this.isValidParent = function(settings, parent) { return true; }
+				this.escape = function(settings, content) { return PHPC.htmlspecialchars(content); }
+				this.open = function(settings, argument, closingCode) { console.log("open"); return '<img src="http://www.scenemusic.eu/static/emoticons/pony.gif">'; }
+				this.close = function(settings, argument, closingCode) { return ''; }
+			}
+			HTMLSmilieBBCode.prototype = new BBCode;
+
+			window.onload = function() {
+				try {
+					var test = document.getElementById("test");
+					var parser = new BBCodeParser();
+					var parser2 = new BBCodeParser(null, null, {
+						"smile": new HTMLSmilieBBCode()
+					}, false, null, null, false, ":", ":");
+					test.innerHTML = parser2.format(parser.format(test.innerHTML));
+				} catch(e) {
+					console.log(e);
+				}
+			};
+		// -->
+		</script>
+	</head>
+	<body>
+		<div id="test">
+			[b]Lorem ipsum dolor sit amet, consectetur adipiscing elit.[/b]
+			[i]Ut sit amet risus vel nisi consequat pulvinar nec auctor augue.[/i]
+			[u]Lorem ipsum dolor sit amet, consectetur adipiscing elit.[/u]
+			[b][i]Pellentesque habitant morbi[/i] [u]tristique senectus et netus et[/u] malesuada fames ac turpis egestas.[/b]
+			[ul]
+			[li]Nulla facilisi.[/li]
+			[li]Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.[/li]
+			[li]Quisque fermentum viverra elit, sed pulvinar erat egestas vehicula.[/li]
+			[li]In a sapien felis.[/li]
+			[/ul]
+			[color=#afedb9]Aenean mi quam, sollicitudin et mattis id, sodales eu est.[/color]
+			Praesent sodales, turpis vel condimentum sodales, felis quam convallis sapien, ac feugiat mi lacus nec nulla.
+			Curabitur et lacus vitae mi congue malesuada at ut nisi.
+			Proin bibendum ultricies odio, at ultrices ligula pulvinar eu.
+			Proin aliquam odio sodales enim aliquet iaculis.
+			Nam nulla neque, euismod eget semper egestas, pharetra sit amet metus.
+			Nam erat ligula, accumsan in ultricies in, fermentum vel dolor.
+			Fusce et enim tortor.
+			:smile:
+		</div>
+	</body>
+</html>
