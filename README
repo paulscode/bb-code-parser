@@ -13,4 +13,5 @@ By default the parser supports conversion of the following bb-code tags to X/HTM
 b, i, u, s, font, size, color, left, center, right, quote, code, codebox, url, img, ul, ol, li, list, *
 
 
+
 In order to keep this README short, I haven't include any usage details. Please see the top of either the PHP or JS bb-code parser file for how to use this library.
