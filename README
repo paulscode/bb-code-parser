@@ -1,7 +1,7 @@
 BB-Code Parser is a bulletin-board code parsing library released under the 3-clause BSD license available in both PHP and JavaScript. It aims to ensure output and feature compatability between both implementations.
 
 Sample bb-code:
-  [b]bold text!{/b]
+  [b]bold text![/b]
   [i]italics[/i]
   [img]http://sample.com/sample.png[/img]
 
@@ -13,4 +13,4 @@ By default the parser supports conversion of the following bb-code tags to X/HTM
 b, i, u, s, font, size, color, left, center, right, quote, code, codebox, url, img, ul, ol, li, list, *
 
 
-To keep this readme short, please see the top of either the PHP or JS bb-code parser file for how to use this library.
+In order to keep this README short, I haven't include any usage details. Please see the top of either the PHP or JS bb-code parser file for how to use this library.
