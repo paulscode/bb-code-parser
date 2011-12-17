@@ -1,0 +1,6 @@
+Contributors:
+
+  Ching-Lan 'digdog' HUANG (http://digdog.tumblr.com)
+       (JS) Escaped html entities &quot and &#039 should end with semicolon.
+       (JS) Replace php str_replace() with javascript string.replace()
+     (BOTH) Fix HTMLImageBBCode().Close() no args error
