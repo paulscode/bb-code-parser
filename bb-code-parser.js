@@ -1,11 +1,10 @@
 
-	/* -- http://www.asmcbain.net/projects/bbcodeparser/bb-code-parser.php
-	   -- 2010-02-07
+	/* -- https://bitbucket.org/AMcBain/bb-code-parser
 	   --
 	   --
 	   -- JS BB-Code Parsing Library
 	   --
-	   -- Copyright 2009, A.McBain
+	   -- Copyright 2009-2011, A.McBain
 
 	    Redistribution and use, with or without modification, are permitted provided that the following
 	    conditions are met:
