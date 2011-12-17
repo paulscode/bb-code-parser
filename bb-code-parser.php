@@ -184,6 +184,8 @@
 			'CodeCSSClassName'         => 'codebox-${lang}', /* ${lang} is the code parameter ex: [code=PHP], ${lang} = php */
 			'LinkUnderline'            => true,
 			'LinkColor'                => 'blue',
+			/*'ImageWidthMax'            => 640,*/ // Uncomment these to tell the BB-Code parser to use them
+			/*'ImageHeightMax'           => 480,*/ // The default is to allow any size image
 			/*'UnorderedListDefaultType' => 'circle',*/ // Uncomment these to tell the BB-Code parser to use this
 			/*'OrderedListDefaultType'   => '1',     */ // default type if the given one is invalid **
 			/*'ListDefaultType'          => 'circle' */ // ...
@@ -1076,9 +1078,21 @@
 			return ($closingCode === null)? '<img src="' : '';
 		}
 		public function close($settings, $argument=null, $closingCode=null) {
-			$args = ($argument !== null)? explode('x', $argument) : null;
 			if($closingCode === null) {
-				return '" alt="image"'.(($argument !== null)? ' style="width: '.intval($args[0]).'; height: '.intval($args[1]).'"' : '').(($settings['XHTML'])? '/>' : '>') : 
+				if($argument !== null) {
+					$args = explode('x', $argument);
+					$width = intval($args[0]);
+					$height = intval($args[1]);
+
+					if(BBCodeParser::isValidKey($settings, 'ImageMaxWidth') && intval($settings['ImageMaxWidth']) !== 0) {
+						$width = min($width, intval($settings['ImageMaxWidth']));
+					}
+					if(BBCodeParser::isValidKey($settings, 'ImageMaxHeight') && intval($settings['ImageMaxHeight']) !== 0) {
+						$height = min($height, intval($settings['ImageMaxHeight']));
+					}
+					return '" alt="image" style="width: '.$width.'; height: '.$height.'"'.(($settings['XHTML'])? '/>' : '>');
+				}
+				return '" alt="image"' + (($settings['XHTML'])? '/>' : '>');
 			}
 			return '';
 		}
