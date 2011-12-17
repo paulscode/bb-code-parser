@@ -12,4 +12,5 @@ The library is also configurable so it can handle non-standard (non-bb-code) syn
 By default the parser supports conversion of the following bb-code tags to X/HTML:
 b, i, u, s, font, size, color, left, center, right, quote, code, codebox, url, img, ul, ol, li, list, *
 
+
 To keep this readme short, please see the top of either the PHP or JS bb-code parser file for how to use this library.
