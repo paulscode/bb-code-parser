@@ -144,6 +144,9 @@
 			}
 			return found;
 		},
+		floatval: function(value) {
+			return parseFloat(value) || 0;
+		},
 		intval: function(value) {
 			var number = Number(value);
 			return (isNaN(number))? 0 : number;
@@ -1126,7 +1129,7 @@
 		this.isValidArgument = function(settings, argument) {
 			if(argument === null || argument === undefined) return true;
 			var args = argument.split('x');
-			return PHPC.count(args) === 2 && floatval(args[0]) === floor(floatval(args[0])) && floatval(args[1]) === floor(floatval(args[1]));
+			return PHPC.count(args) === 2 && PHPC.floatval(args[0]) === floor(PHPC.floatval(args[0])) && PHPC.floatval(args[1]) === floor(PHPC.floatval(args[1]));
 		}
 		this.isValidParent = function(settings, parent) { return true; }
 		this.escape = function(settings, content) { return PHPC.htmlspecialchars(content); }
