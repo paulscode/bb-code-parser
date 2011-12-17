@@ -148,7 +148,7 @@
 				'color'   => new HTMLColorBBCode(),
 				'left'    => new HTMLLeftBBCode(),
 				'center'  => new HTMLCenterBBCode(),
-				'right'    => new HTMLLeftBBCode(),
+				'right'   => new HTMLLeftBBCode(),
 				'quote'   => new HTMLQuoteBBCode(),
 				'code'    => new HTMLCodeBBCode(),
 				'codebox' => new HTMLCodeBoxBBCode(),

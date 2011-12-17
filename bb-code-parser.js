@@ -1009,7 +1009,7 @@
 		this.isValidArgument = function(settings, argument) { return true; }
 		this.isValidParent = function(settings, parent) { return true; }
 		this.escape = function(settings, content) { return PHPC.htmlspecialchars(content); }
-		this.open = function(settings, argument, closingCode) {//1px solid gray
+		this.open = function(settings, argument, closingCode) {
 			if(closingCode === undefined) closingCode = null;
 			if(closingCode === null) {
 				var box  = '<div style="display: block; margin-bottom: .5em; border: ' + PHPC.htmlspecialchars(settings['QuoteBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['QuoteBackground']) + '">';
