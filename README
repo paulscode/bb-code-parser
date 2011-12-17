@@ -1,4 +1,4 @@
-BB-Code Parser is a bulletin-board code parsing library released under the 3-clause BSD license available in both PHP and JavaScript. It aims to ensure output and feature compatability between both implementations.
+BB-Code Parser is a bulletin-board code parsing library released under the 3-clause BSD license and available in both PHP and JavaScript. It aims to ensure feature and output compatability between both implementations.
 
 Sample bb-code:
   [b]bold text![/b]
