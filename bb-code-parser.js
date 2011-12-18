@@ -26,7 +26,7 @@
 
 	   --
 
-	    While this software is released "as is", that doesn't mean I won't mind getting valid bug reports.
+	    While this software is released "as is", I don't mind getting bug reports.
 	*/
 
 	/*
