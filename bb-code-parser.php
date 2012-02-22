@@ -304,7 +304,7 @@
 			if($handleOverlappingCodes !== true && $handleOverlappingCodes !== false) {
 				$handleOverlappingCodes = $this->handleOverlappingCodes;
 			}
-			if($handleOverlappingCodes !== true && $handleOverlappingCodes !== false) {
+			if($escapeContentOutput !== true && $escapeContentOutput !== false) {
 				$escapeContentOutput = $this->escapeContentOutput;
 			}
 
@@ -457,7 +457,7 @@
 					// Escape content tokens via their parent's escaping function
 					if($token->type === BBCodeParser_Token::$CONTENT) {
 						$parent = $this->state__findStartCodeWithStatus($queue, BBCodeParser_Token::$VALID, $i);
-						$output .= (!$escapeContentOutput)? : ($parent === false || !BBCodeParser::isValidKey($codes, $queue[$parent]->content))? $codes['GLOBAL']->escape($settings, $token->content) : $codes[$queue[$parent]->content]->escape($settings, $token->content);
+						$output .= (!$escapeContentOutput)? $token->content : ($parent === false || !BBCodeParser::isValidKey($codes, $queue[$parent]->content))? $codes['GLOBAL']->escape($settings, $token->content) : $codes[$queue[$parent]->content]->escape($settings, $token->content);
 
 					// Handle start codes
 					} else if($token->type === BBCodeParser_Token::$CODE_START) {
@@ -539,7 +539,7 @@
 					}
 				}
 			} else {
-				$output .= (!$escapeContentOutput)? : $codes['GLOBAL']->escape($settings, $input);
+				$output .= (!$escapeContentOutput)? $input : $codes['GLOBAL']->escape($settings, $input);
 			}
 
 			return $output;
