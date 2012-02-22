@@ -1049,7 +1049,7 @@
 		public function isValidParent($settings, $parent=null) { return true; }
 		public function escape($settings, $content) { return htmlspecialchars($content); }
 		public function open($settings, $argument=null, $closingCode=null) {
-			$decoration = (!BBCodeParser::isValidKey($settings, 'LinkUnderline']) || $settings['LinkUnderline'])? 'underline' : 'none';
+			$decoration = (!BBCodeParser::isValidKey($settings, 'LinkUnderline') || $settings['LinkUnderline'])? 'underline' : 'none';
 			return '<a style="text-decoration: '.$decoration.'; color: '.htmlspecialchars($settings['LinkColor']).'" href="'.htmlspecialchars($argument).'">';
 		}
 		public function close($settings, $argument=null, $closingCode=null) {
