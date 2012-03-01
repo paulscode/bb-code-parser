@@ -4,3 +4,6 @@ Contributors:
        (JS) Escaped html entities &quot and &#039 should end with semicolon.
        (JS) Replace php str_replace() with javascript string.replace()
      (BOTH) Fix HTMLImageBBCode().Close() no args error
+
+  Hunter Brooks Ryba
+      (PHP) Bug reports
