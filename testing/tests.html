@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jasmine / bb-code-parser tester</title>
+
+		<link rel="shortcut icon" type="image/png" href="jasmine/jasmine_favicon.png">
+		<link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+
+		<script src="jasmine/jasmine.js"></script>
+		<script src="jasmine/jasmine-html.js"></script>
+		<script src="../bb-code-parser.js"></script>
+
+		<script type="text/javascript">
+			(function() {
+				var loadError = "<div class='alert'><span class='failingAlert bar'>";
+
+				var file = "tests.json";
+				var request = new XMLHttpRequest();
+				request.open("get", file, false);
+				request.send(null);
+
+				if (request.readyState === 4 && request.status === 200) {
+					try {
+						// Won't exist in IE < 8. Still using IE7? Upgrade dude!
+						request = JSON.parse(request.responseText);
+					} catch (e) {
+						window.onload = function () {
+							document.body.id = "HTMLReporter";
+							document.body.innerHTML = loadError + file + " failed to parse. " + e;
+						};
+						return;
+					}
+				} else {
+					window.onload = function () {
+						document.body.id = "HTMLReporter";
+						document.body.innerHTML = loadError + "Failed to get " + file + ": " + request.status
+								+ " " + request.statusText;
+					};
+					return;
+				}
+
+				function setupConfiguration (name, configuration, unitTests) {
+
+					describe(name, (function (configuration) {
+						// Jasmine appears to call these functions immediately (or close to), so this isn't really
+						// needed, but doing it this way follows convention and ensures safety against potential
+						// future changes to jasmine which delay calling.
+						return function () {
+
+							var parser, test;
+							beforeEach(function () {
+								// Can't apply a constructor, this is as close as it gets. Not all "class"-
+								// functions support this. Native ones are least likely to work this way.
+								parser = new BBCodeParser();
+								BBCodeParser.apply(parser, configuration.constructorArguments);
+							});
+
+							for (test in unitTests) {
+								test = unitTests[test];
+
+								// Allows grouped tests testing the same configuration.
+								if (test.unitTests) {
+									setupConfiguration(test.name, configuration, test.unitTests);
+								} else {
+									it(test.name, (function (test) {
+										return function () {
+
+											expect(parser.format.apply(parser, [ test.input ]
+												.concat(configuration.formatArguments)))
+												.toEqual(test.error ? test.input : test.result);
+										};
+									}(test)));
+								}
+							}
+						};
+					}(configuration)));
+				}
+
+				// Set up all the tests for each configuration.
+				var configuration;
+				for (configuration in request.unitConfigurations) {
+
+					configuration = request.unitConfigurations[configuration];
+					configuration.constructArguments = configuration.constructorArguments || [];
+					configuration.formatArguments = configuration.formatArguments || [];
+
+					setupConfiguration(configuration.name, configuration, request.unitTests);
+				}
+
+				var env = jasmine.getEnv();
+				// Default is something like 250 ... I assume this causes it to jive with the interval used when
+				// a tab is not active in Firefox and the like. If it takes a long time to update, the browser
+				// might generate a dialog which is bad for automated testing.
+				env.updateInterval = 1000;
+
+				var reporter = new jasmine.HtmlReporter();
+				env.addReporter(reporter);
+
+				// Because it's not documented anywhere else (Google, Jasmine documentation, Jasmine source ...)
+				// this causes the output to show only a given set of tests or single test when the appropriate
+				// link is clicked on. That wasn't so hard to write, was it? Why can't they do that?
+				env.specFilter = function(spec) {
+					return reporter.specFilter(spec);
+				};
+
+				window.onload = function() {
+					env.execute();
+				};
+			})();
+		</script>
+	</head>
+	<body></body>
+</html>

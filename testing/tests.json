@@ -1,0 +1,24 @@
+{
+	"comments" : [ "Used by both the PHP and JavaScript bb-code-parser libraries. Written to be language agnostic and easy to use so both benefit.",
+	               "This tests all the options as they apply to the default included BBCode implementations.",
+	               "Whitebox testing may be added in the future to directly verify the parser, but this is the first step in testing this library." ],
+        "unitConfigurations" : [ {
+		"name" : "default configuration"
+        } ],
+	"unitTests" : [ {
+		"name" : "built-in bold code",
+		"input" : "[b]bold[/b]",
+		"result" : "<b>bold</b>"
+	}, {
+		"name" : "built-in bold code",
+		"input" : "[b]bold[/b]",
+		"result" : "<b>bold</b>"
+	}, {
+		"name" : "grouped tests",
+		"unitTests" : [ {
+			"name" : "built-in bold code",
+			"input" : "[b]bold[/b]",
+			"result" : "<b>bold</b>"
+		} ]
+	} ]
+}
