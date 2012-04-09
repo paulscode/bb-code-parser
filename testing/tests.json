@@ -1,24 +1,67 @@
 {
 	"comments" : [ "Used by both the PHP and JavaScript bb-code-parser libraries. Written to be language agnostic and easy to use so both benefit.",
 	               "This tests all the options as they apply to the default included BBCode implementations.",
-	               "Whitebox testing may be added in the future to directly verify the parser, but this is the first step in testing this library." ],
+	               "Whitebox testing may be added in the future to directly verify the parser, but this is the first step in testing this library.",
+	               "Tests with no 'run' array are run for all configurations and tests with no 'stop' array are stopped for none.",
+	               "'stop' is ignored if 'run' is present, as it makes no sense to stop a test on configurations for which it would never run." ],
         "unitConfigurations" : [ {
-		"name" : "default configuration"
+		"name" : "default configuration",
+		"key" : "default"
+	}, {
+		"name" : "configuration with different font size unit",
+		"key" : "fontsize",
+		"constructorArguments" : [ null, {
+			"FontSizeUnit" : "px"
+		} ]
         } ],
 	"unitTests" : [ {
-		"name" : "built-in bold code",
-		"input" : "[b]bold[/b]",
-		"result" : "<b>bold</b>"
-	}, {
-		"name" : "built-in bold code",
-		"input" : "[b]bold[/b]",
-		"result" : "<b>bold</b>"
-	}, {
-		"name" : "grouped tests",
+		"name" : "simple built-in codes",
 		"unitTests" : [ {
-			"name" : "built-in bold code",
-			"input" : "[b]bold[/b]",
-			"result" : "<b>bold</b>"
+			"name" : "bold",
+			"input" : "[b]text[/b]",
+			"result" : "<b>text</b>"
+		}, {
+			"name" : "italic",
+			"input" : "[i]text[/i]",
+			"result" : "<i>text</i>"
+		}, {
+			"name" : "underline",
+			"input" : "[u]text[/u]",
+			"result" : "<u>text</u>"
+		}, {
+			"name" : "strike-through",
+			"input" : "[s]text[/s]",
+			"result" : "<s>text</s>"
+		}, {
+			"name" : "font",
+			"input" : "[font=serif]text[/font]",
+			"result" : "<span style=\"font-family: 'serif'\">text</span>"
+		}, {
+			"name" : "font size default unit",
+			"run" : [ "default" ],
+			"input" : "[size=16]text[/size]",
+			"result" : "<span style=\"font-size: 16pt\">text</span>"
+		}, {
+			"name" : "font size non-default unit",
+			"run" : [ "fontsize" ],
+			"input" : "[size=16]text[/size]",
+			"result" : "<span style=\"font-size: 16px\">text</span>"
 		} ]
+	}, {
+		"name" : "no codes in input",
+		"input" : "no codes in input",
+		"result" : "no codes in input"
+	}, {
+		"name" : "code at start",
+		"input" : "[b]text[/b] end",
+		"result" : "<b>text</b> end"
+	}, {
+		"name" : "code at end",
+		"input" : "start [b]text[/b]",
+		"result" : "start <b>text</b>"
+	}, {
+		"name" : "code in middle",
+		"input" : "start [b]text[/b] end",
+		"result" : "start <b>text</b> end"
 	} ]
 }

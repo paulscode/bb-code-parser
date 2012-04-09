@@ -39,6 +39,23 @@
 					return;
 				}
 
+				function mapify(value) {
+					var i, map;
+
+					if (value instanceof Array) {
+						map = {};
+
+						for (i = 0; i < value.length; i++) {
+							map[value[i]] = true;
+						}
+					}
+					return map || value;
+				}
+
+				function allowed(test, configuration) {
+					return (test.run ? test.run[configuration.key] : (!test.stop || !test.stop[configuration.key]));
+				}
+
 				function setupConfiguration (name, configuration, unitTests) {
 
 					describe(name, (function (configuration) {
@@ -57,19 +74,23 @@
 
 							for (test in unitTests) {
 								test = unitTests[test];
+								test.run = mapify(test.run);
+								test.stop = mapify(test.stop);
 
-								// Allows grouped tests testing the same configuration.
-								if (test.unitTests) {
-									setupConfiguration(test.name, configuration, test.unitTests);
-								} else {
-									it(test.name, (function (test) {
-										return function () {
+								if (allowed(test, configuration)) {
+									// Allows grouped tests testing the same configuration.
+									if (test.unitTests) {
+										setupConfiguration(test.name, configuration, test.unitTests);
+									} else {
+										it(test.name, (function (test) {
+											return function () {
 
-											expect(parser.format.apply(parser, [ test.input ]
-												.concat(configuration.formatArguments)))
-												.toEqual(test.error ? test.input : test.result);
-										};
-									}(test)));
+												expect(parser.format.apply(parser, [ test.input ]
+														.concat(configuration.formatArguments)))
+														.toEqual(test.error ? test.input : test.result);
+											};
+										}(test)));
+									}
 								}
 							}
 						};
