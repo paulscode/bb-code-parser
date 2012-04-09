@@ -844,7 +844,7 @@
 
 	function HTMLFontSizeBBCode() {
 		this.getCodeName = function() { return 'Font Size'; }
-		this.getDisplayName = function() { return 'font'; }
+		this.getDisplayName = function() { return 'size'; }
 		this.needsEnd = function() { return true; }
 		this.canHaveCodeContent = function() { return true; }
 		this.canHaveArgument = function() { return true; }

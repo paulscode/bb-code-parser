@@ -806,7 +806,7 @@
 
 	class HTMLFontSizeBBCode implements BBCode {
 		public function getCodeName() { return 'Font Size'; }
-		public function getDisplayName() { return 'font'; }
+		public function getDisplayName() { return 'size'; }
 		public function needsEnd() { return true; }
 		public function canHaveCodeContent() { return true; }
 		public function canHaveArgument() { return true; }
