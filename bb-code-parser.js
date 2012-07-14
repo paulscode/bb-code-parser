@@ -504,7 +504,7 @@
 
 				// Final loop to print out all the open/close tags as appropriate
 				for(i = 0; i < count; i++) {
-					var token = queue[i];
+					var parent, token = queue[i];
 
 					// Escape content tokens via their parent's escaping function
 					if(token.type === BBCodeParser_Token.CONTENT) {
