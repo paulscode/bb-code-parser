@@ -292,7 +292,7 @@
 				$this->bbCodes['GLOBAL'] = new DefaultGlobalBBCode();
 			}
 
-			if($options && $options['allowedCodes'] && is_array($options['allowedCodes'])) {
+			if($options && BBCodeParser::isValidKey($options, 'allowedCodes') && is_array($options['allowedCodes'])) {
 				$this->allowedCodes = array_slice($options['allowedCodes'], 0);
 			} else {
 				foreach(array_keys($this->bbCodes) as $key) {
