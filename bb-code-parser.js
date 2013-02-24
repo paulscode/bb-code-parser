@@ -317,17 +317,19 @@
 			}
 
 			// Copy passed code implementations
-			if(options.codes && !options.replaceDefaults) {
+			if(options.codes) {
 
-				for(key in options.codes) {
-					value = options.codes[key];
+				if (options.replaceDefaults) {
+					_bbCodes = PHPC.copy(options.codes);
+				} else {
+					for(key in options.codes) {
+						value = options.codes[key];
 
-					if(value instanceof BBCode) {
-						_bbCodes[key] = value;
+						if(value instanceof BBCode) {
+							_bbCodes[key] = value;
+						}
 					}
 				}
-			} else {
-				_bbCodes = PHPC.copy(options.codes) || {};
 			}
 		}
 
