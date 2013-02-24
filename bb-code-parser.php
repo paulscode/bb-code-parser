@@ -267,10 +267,10 @@
 				}
 
 				// Copy passed code implementations
-				if(options['codes']) {
+				if($options['codes']) {
 
-					if (options['replaceDefaults']) {
-						$this->bbCodes = options['codes'];
+					if ($options['replaceDefaults']) {
+						$this->bbCodes = $options['codes'];
 					} else {
 						foreach($options['codes'] as $key => $value) {
 							if ($value instanceof BBCode) {
