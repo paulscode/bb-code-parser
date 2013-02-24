@@ -4,7 +4,7 @@
 	   --
 	   -- PHP BB-Code Parsing Library,
 	   --
-	   -- Copyright 2009-2011, A.McBain
+	   -- Copyright 2009-2013, A.McBain
 
 	    Redistribution and use, with or without modification, are permitted provided that the following
 	    conditions are met:
@@ -52,27 +52,30 @@
 		$output = $parser->format($input);
 
 		// Replace all allowed codes with default settings
-		$allowedCodes = array('b', 'i', 'u');
-		$parser = new BBCodeParser($allowedCodes);
+		$parser = new BBCodeParser({
+			allowedCodes => array('b', 'i', 'u')
+		});
 		$output = $parser->format($input);
 
 		// Replace all allowed codes with custom settings (not all codes have settings)
-		$allowedCodes = array('b', 'i', 'u');
-		$settings = array(
-			'FontSizeUnit' => 'px'
-		);
-		$parser = new BBCodeParser($allowedCode, $settings);
+		$parser = new BBCodeParser({
+			allowedCodes => array('b', 'i', 'u'),
+			settings => array(
+				'FontSizeUnit' => 'px'
+			)
+		});
 		$output = $parser->format($input);
 
 		// Replace the implementation for 'Bold'
-		$allowedCodes = array('b', 'i', 'u');
-		$settings = array(
-			'FontSizeUnit' => 'px'
-		);
-		$codeImpls = array(
-			'b' => new HTMLBoldBBCode()
-		);
-		$parser = new BBCodeParser($allowedCode, $settings, $codeImpls);
+		$parser = new BBCodeParser({
+			allowedCodes => array('b', 'i', 'u'),
+			settings : array(
+				'FontSizeUnit' => 'px'
+			),
+			codes : array(
+				'b' => new HTMLBoldBBCode()
+			)
+		});
 		$output = $parser->format($input);
 	*/
 
@@ -132,6 +135,7 @@
 	class BBCodeParser {
 
 		private $bbCodes = array();
+        private $bbCodeCount = 0;
 
 		// Mapped Array with all the default implementations of BBCodes.
 		// It is not advised this be edited directly as this will affect all other calls.
@@ -205,25 +209,25 @@
 		   These parameters are supplimentary and overrides, that is, they are in addition to the defaults
 		   already included, but they will override an default if found.
 
-		   Use null to skip any parameters to set later ones.
+		   These options are passed in via an object. Just don't define those which you want to use the default.
 
 		   $allowedCodes is an array of "display names" (b, i, ...) that are allowed to be parsed and formatted
 		                 in the output. If null is passed, all default codes are allowed.
-		       Default: null (allow all defaults)
+		       Default: allow all defaults
 
 		   $settings is a mapped array of settings which various formatter implementations may use to control output.
-		       Default: null (use built in default settings)
+		       Default: use built in default settings
 
 		   $codes is a mapped array of "display names" to implementations of BBCode which are used to format output.
-		       Default: null (no supplementary codes)
+		          Any codes with the same name as a default will replace the default implementation. If you also
+		          specify allowedCodes, don't forget to include these.
+		       Default: no supplementary codes
 
-		   $supplementDeafults tells the parser whether the given codes are used to supplement default codes (and
-		                       override existing ones if they exist) or whether they should be the only implementations
-		                       available to the parser (do not use the defaults).
-		                       Note: if this is true, and null is passed for $codes, NO code imlplementations will be available.
-		                       Note: if this is true, and no 'GLOBAL' implementation is provided, a default one
-		                             which does nothing will be provided.
-		       Default: true (passed in implementation codes supplement defaults)
+		   $replaceDefaults indicates whether the previous codes map should be used in place of all the defaults
+		                    instead of supplementing it. If this is set to true, and no GLOBAL code implementation is
+		                    provided in the codes map, a default one will be provided that just returns content given
+		                    to it unescaped.
+		       Default: false
 
 		   $allOrNothing refers to what happens when an invalid code is found. If true, it stops returns the input.
 		                 If false, it keeps on going (output may not display as expected).
@@ -245,72 +249,65 @@
 		   $codeEndSymbol is the symbol denoting the end of a code (default is ] for easy compatability with BB-Code)
 		       Default: ']'
 		*/
-		public function __construct($allowedCodes=null, $settings=null, $codes=null, $supplementDefaults=true, $allOrNothing=true, $handleOverlappingCodes=false, $escapeContentOutput=true, $codeStartSymbol='[', $codeEndSymbol=']') {
+		public function __construct($options=null) {
+			$this->setupDefaultCodes();
 
-			if($allOrNothing === true || $allOrNothing === false) $this->allOrNothing = $allOrNothing;
-			if($handleOverlappingCodes === true || $handleOverlappingCodes === false) $this->handleOverlappingCodes = $handleOverlappingCodes;
-			if($escapeContentOutput === true || $escapeContentOutput === false) $this->escapeContentOutput = $escapeContentOutput;
-			if($codeStartSymbol) $this->codeStartSymbol = $codeStartSymbol;
-			if($codeEndSymbol) $this->codeEndSymbol = $codeEndSymbol;
+			if($options) {
+				$this->allOrNothing = BBCodeParser::isValidKey($options, 'allorNothing')? !!$options.allOrNothing : $this->allOrNothing;
+				$this->handleOverlappingCodes = BBCodeParser::isValidKey($options, 'handleOverlappingCodes')? !!$options.handleOverlappingCodes : $this->handleOverlappingCodes;
+				$this->escapeContentOutput = BBCodeParser::isValidKey($options, 'escapeContentOutput')? !!$options.escapeContentOutput : $this->escapeContentOutput;
+				$this->codeStartSymbol = $options.codeStartSymbol || $this->codeStartSymbol;
+				$this->codeEndSymbol = $options.codeEndSymbol || $this->codeEndSymbol;
 
-			if(count($this->bbCodes) === 0) {
-				$this->setupDefaultCodes();
-			}
-
-			// Copy settings
-			if(!$settings) $settings = array();
-			foreach($settings as $key => $value) {
-				$this->settings[$key] = $value.'';
-			}
-
-			// Copy passed code implementations
-			if(!$codes) $codes = array();
-			if($supplementDefaults) {
-				foreach($codes as $key => $value) {
-					if($value instanceof BBCode) {
-						$this->bbCodes[$key] = $value;
+				// Copy settings
+				if($options['settings']) {
+					foreach($options['settings'] as $key => $value) {
+						$this->settings[$key] = $value.'';
 					}
 				}
-			} else {
-				$this->bbCodes = $codes;
 
-				// If no global bb-code implementation, provide a default one.
-				if(BBCodeParser::isValidKey($this->bbCodes, 'GLOBAL') || !($this->bbCodes['GLOBAL'] instanceof BBCode)) {
-					$this->bbCodes['GLOBAL'] = new DefaultGlobalBBCode();
+				// Copy passed code implementations
+				if(options['codes'] && !options['replaceDefaults']) {
+
+					foreach($options['codes'] as $key => $value) {
+						if ($value instanceof BBCode) {
+							$this->bbCodes[$key] = $value;
+						}
+					}
+				} else {
+					$this->bbCodes = options['codes'];
 				}
 			}
 
-			// If allowed codes is null, make it the same as specifying all the codes
-			$count = count($allowedCodes);
-			if($count > 0) {
-				for($i = 0; $i < $count; $i++) {
-					$this->allowedCodes[] = $allowedCodes[$i].'';
-				}
-			} else if($allowedCodes === null) {
-				foreach($this->bbCodes as $key => $value) {
-					$this->allowedCodes[] = $key.'';
+			$this->bbCodeCount = count($this->bbCodes);
+
+			// If no global bb-code implementation, provide a default one.
+			if(BBCodeParser::isValidKey($this->bbCodes, 'GLOBAL') || !($this->bbCodes['GLOBAL'] instanceof BBCode)) {
+
+				// This should not affect the bb-code count as if it is the only bb-code, the effect is
+				// the same as if no bb-codes were allowed / supplied.
+				$this->bbCodes['GLOBAL'] = new DefaultGlobalBBCode();
+			}
+
+			if($options && $options['allowedCodes'] && is_array($options['allowedCodes'])) {
+				$this->allowedCodes = array_slice($options['allowedCodes'], 0);
+			} else {
+				foreach(array_keys($this->bbCodes) as $key) {
+					$this->allowedCodes[] = $key;
 				}
 			}
 		}
 
 		// Parses and replaces allowed BBCodes with the settings given when this parser was created
 		// $allOrNothing, $handleOverlapping, and $escapeContentOutput codes can be overridden per call
-		public function format($input, $allOrNothing=null, $handleOverlappingCodes=null, $escapeContentOutput=null) {
+		public function format($input, $options=null) {
 
-			// Copy over defaults if no overrides given
-			if($allOrNothing !== true && $allOrNothing !== false) {
-				$allOrNothing = $this->allOrNothing;
-			}
-			if($handleOverlappingCodes !== true && $handleOverlappingCodes !== false) {
-				$handleOverlappingCodes = $this->handleOverlappingCodes;
-			}
-			if($escapeContentOutput !== true && $escapeContentOutput !== false) {
-				$escapeContentOutput = $this->escapeContentOutput;
-			}
+			$allOrNothing = BBCodeParser::isValidKey($options, 'allorNothing')? !!$options.allOrNothing : $this->allOrNothing;
+			$handleOverlappingCodes = BBCodeParser::isValidKey($options, 'handleOverlappingCodes')? !!$options.handleOverlappingCodes : $this->handleOverlappingCodes;
+			$escapeContentOutput = BBCodeParser::isValidKey($options, 'escapeContentOutput')? !!$options.escapeContentOutput : $this->escapeContentOutput;
 
 			// Why bother parsing if there's no codes to find?
-			$moreThanDefaultGlobal = count($this->bbCodes) - (($this->bbCodes['GLOBAL'] instanceof DefaultGlobalBBCode)? 1 : 0) > 0;
-			if(count($this->allowedCodes) > 0 && count($this->bbCodes) > 0 && $moreThanDefaultGlobal) {
+			if($this->bbCodeCount > 0 && count($this->allowedCodes) > 0) {
 				return $this->state_replace($input, $this->allowedCodes, $this->settings, $this->bbCodes, $allOrNothing, $handleOverlappingCodes, $escapeContentOutput, $this->codeStartSymbol, $this->codeEndSymbol);
 			}
 
@@ -332,7 +329,7 @@
 					$code = $tokenizer->nextToken($codeEndSymbol);
 
 					// If "valid" parse further
-					if($code !== false && $before !== false && $code !== '') {
+					if($code !== '') {
 
 						// Store content before code
 						if($before !== '') {
@@ -429,7 +426,7 @@
 								}
 
 								// Handle valid end codes, mark others invalid
-								if($start === false || $queue[$start]->content !== $content) {
+								if($start === -1 || $queue[$start]->content !== $content) {
 									$token->status = BBCodeParser_Token::$INVALID;
 								} else {
 									$token->status = BBCodeParser_Token::$VALID;
@@ -457,7 +454,7 @@
 					// Escape content tokens via their parent's escaping function
 					if($token->type === BBCodeParser_Token::$CONTENT) {
 						$parent = $this->state__findStartCodeWithStatus($queue, BBCodeParser_Token::$VALID, $i);
-						$output .= (!$escapeContentOutput)? $token->content : ($parent === false || !BBCodeParser::isValidKey($codes, $queue[$parent]->content))? $codes['GLOBAL']->escape($settings, $token->content) : $codes[$queue[$parent]->content]->escape($settings, $token->content);
+						$output .= (!$escapeContentOutput)? $token->content : ($parent === -1 || !BBCodeParser::isValidKey($codes, $queue[$parent]->content))? $codes['GLOBAL']->escape($settings, $token->content) : $codes[$queue[$parent]->content]->escape($settings, $token->content);
 
 					// Handle start codes
 					} else if($token->type === BBCodeParser_Token::$CODE_START) {
@@ -471,7 +468,7 @@
 							   ($codes[$token->content]->canHaveArgument() && !$codes[$token->content]->isValidArgument($settings, $token->argument)) ||
 							   (!$codes[$token->content]->canHaveArgument() && $token->argument) ||
 							   ($codes[$token->content]->mustHaveArgument() && !$token->argument) ||
-							   ($parent !== false && !$codes[$queue[$parent]->content]->canHaveCodeContent())) {
+							   ($parent !== -1 && !$codes[$queue[$parent]->content]->canHaveCodeContent())) {
 
 								$token->status = BBCodeParser_Token::$INVALID;
 								// Both tokens in the pair should be marked
@@ -483,7 +480,7 @@
 								if($allOrNothing) return $input;
 							}
 
-							$parent = ($parent === false)? 'GLOBAL' : $queue[$parent]->content;
+							$parent = ($parent === -1)? 'GLOBAL' : $queue[$parent]->content;
 						}
 
 						// Check the parent code too ... some codes are only used within other codes
@@ -555,7 +552,7 @@
 				$index = $i;
 			}
 
-			return ($found)? $index : false;
+			return ($found)? $index : -1;
 		}
 
 		// Finds the closest valid parent with a certain content to the given position, working backwards
@@ -570,7 +567,7 @@
 				$index = $i;
 			}
 
-			return ($found)? $index : false;
+			return ($found)? $index : -1;
 		}
 
 		// Find the parent start-code of another code
@@ -585,7 +582,7 @@
 				$index = $i;
 			}
 
-			return ($found)? $index : false;
+			return ($found)? $index : -1;
 		}
 
 		// Removes the given value from an array (match found by reference)
@@ -626,7 +623,7 @@
 
 		// Whether or not a key in an array is valid or not (is set, and is not null)
 		public static function isValidKey(&$array, $key) {
-			return isset($array[$key]) && $array[$key] !== null;
+			return isset($array[$key]);
 		}
 
 	}
@@ -667,7 +664,7 @@
 			$result = substr($this->input, $this->position, $index - $this->position);
 			$this->position = $index + 1;
 
-			return $result;
+			return ($result !== false)? $result : '';
 		}
 
 		public function reset() {

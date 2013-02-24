@@ -4,7 +4,7 @@
 	   --
 	   -- JS BB-Code Parsing Library
 	   --
-	   -- Copyright 2009-2011, A.McBain
+	   -- Copyright 2009-2013, A.McBain
 
 	    Redistribution and use, with or without modification, are permitted provided that the following
 	    conditions are met:
@@ -44,35 +44,36 @@
 	*/
 
 	/* Using the BBCodeParser:
-		Note any of the inputs shown here can be skipped by sending null instead:
-		ex:  new BBCodeParser(null, settings);
 
 		// Replace all defined codes with default settings
 		var parser = new BBCodeParser();
 		var output = parser.format(input);
 
-		// Replace all allowed codes with default settings
-		var allowedCodes = ['b', 'i', 'u'];
-		var parser = new BBCodeParser(allowedCodes);
+		// Specify allowed codes
+		var parser = new BBCodeParser({
+			allowedCodes : ['b', 'i', 'u']
+		});
 		var output = parser.format(input);
 
 		// Replace all allowed codes with custom settings (not all codes have settings)
-		var allowedCodes = ['b', 'i', 'u'];
-		var settings = {
-			'FontSizeUnit' : 'px'
-		};
-		var parser = new BBCodeParser(allowedCode, settings);
+		var parser = new BBCodeParser({
+			allowedCodes : ['b', 'i', 'u'],
+			settings : {
+				'FontSizeUnit' : 'px'
+			}
+		});
 		var output = parser.format(input);
 
 		// Replace the implementation for 'Bold'
-		var allowedCodes = ['b', 'i', 'u'];
-		settings = {
-			'FontSizeUnit' : 'px'
-		};
-		var codeImpls = {
-			'b' : new HTMLBoldBBCode()
-		};
-		var parser = new BBCodeParser(allowedCode, settings, codeImpls);
+		var parser = new BBCodeParser({
+			allowedCodes : ['b', 'i', 'u'],
+			settings : {
+				'FontSizeUnit' : 'px'
+			},
+			codes : {
+				'b' : new HTMLBoldBBCode()
+			}
+		});
 		var output = parser.format(input);
 	*/
 
@@ -137,6 +138,12 @@
 			return count;
 		},
 		in_array: function(needle, haystack) {
+
+			// Faster ES5 function.
+			if(haystack.indexOf) {
+				return haystack.indexOf(needle) !== -1;
+			}
+
 			var found = false;
 			for(var i = 0; i < haystack.length && !found; i++) {
 				found = haystack[i] === needle;
@@ -151,36 +158,46 @@
 			return (isNaN(number))? 0 : number;
 		},
 		htmlspecialchars: function(value) {
-			if(!value) return "";
-			return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+			if(!value) return '';
+			return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+		},
+		// Not really a function in PHP, just a fact of how its = operator copies arrays by default.
+		copy: function(value) {
+			if (!value) return value;
+
+			var result = {};
+			for (var key in value) {
+				result[key] = value;
+			}
+			return result;
 		}
 	}
 
 	/*
 	   Sets up the BB-Code parser with the given settings.
-	   If null is passed for allowed codes, all are allowed. If no settings are passed, defaults are used.
-	   These parameters are supplimentary and overrides, that is, they are in addition to the defaults
-	   already included, but they will override an default if found.
+	   If a falsy value is passed for allowed codes, all are allowed. If no settings are passed, defaults are used.
+	   These parameters are supplimentary and overrides, that is, they are in addition to the defaults already
+	   included, but they will override an default if found.
 
-	   Use null to skip any parameters to set later ones.
+	   Theses options are passed in via an object. Just don't define those for which you want to use the default.
 
-	   allowedCodes is an array of "display names" (b, i, ...) that are allowed to be parsed and formatted
-                    in the output. If null is passed, all default codes are allowed.
-	       Default: null (allow all defaults)
+	   allowedCodes is an array of "display names" (b, i, ...), it defines which that are allowed to be parsed and formatted
+	                in the output. If nothing is passed, all default codes are allowed.
+	       Default: allow all defaults
 
 	   settings is a mapped array of settings which various formatter implementations may use to control output.
-	       Default: null (use built in default settings)
+	       Default: use built in default settings
 
-	   codes is a mapped array of "display names" to implementations of BBCode which are used to format output.
-	       Default: null (no supplementary codes)
+	   $codes is a map of "display names" to implementations of BBCode which are used to format output.
+	          Any codes with the same name as a default will replace the default implementation. If you also
+	          specify allowedCodes, don't forget to include these.
+	       Default: no supplementary codes
 
-	   supplementDeafults tells the parser whether the given codes are used to supplement default codes (and
-	                      override existing ones if they exist) or whether they should be the only implementations
-	                      available to the parser (do not use the defaults).
-	                      Note: if this is true, and null is passed for codes, NO code imlplementations will be available.
-	                      Note: if this is true, and no 'GLOBAL' implementation is provided, a default one
-	                            which does nothing will be provided.
-	       Default: true (passed in implementation codes supplement defaults)
+	   $replaceDefaults indicates whether the previous codes map should be used in place of all the defaults
+	                    instead of supplementing it. If this is set to true, and no GLOBAL code implementation is
+	                    provided in the codes map, a default one will be provided that just returns content given
+	                    to it unescaped.
+	       Default: false
 
 	   allOrNothing refers to what happens when an invalid code is found. If true, it stops returns the input.
 	                If false, it keeps on going (output may not display as expected).
@@ -204,9 +221,10 @@
 	*/
 	// Class for the BB-Code Parser.
 	// Each parser is immutable, each instance's settings, codes, etc, are "final" after the parser is created.
-	function BBCodeParser(allowedCodes, settings, codes, supplementDefaults, allOrNothing, handleOverlappingCodes, escapeContentOutput, codeStartSymbol, codeEndSymbol) {
+	function BBCodeParser(options) {
 
-		var _bbCodes = [];
+		var _bbCodes = {};
+		var _bbCodeCount = 0;
 
 		// Mapped Array with all the default implementations of BBCodes.
 		// It is not advised this be edited directly as this will affect all other calls.
@@ -280,60 +298,54 @@
 		 /* START CONSTRUCTOR CODE */
 		/**************************/
 
-		if(allowedCodes === undefined) allowedCodes = null;
-		if(settings === undefined) settings = null;
-		if(supplementDefaults === undefined) supplementDefaults = true;
-		if(allOrNothing === undefined) allOrNothing = true;
-		if(handleOverlappingCodes === undefined) handleOverlappingCodes = false;
-		if(codeStartSymbol === undefined) codeStartSymbol = '[';
-		if(codeEndSymbol === undefined) codeEndSymbol = ']';
+		setupDefaultCodes();
 
+		if (options) {
+			_allOrNothing = BBCodeParser.isValidKey(options, 'allorNothing')? !!options.allOrNothing : _allOrNothing;
+			_handleOverlappingCodes = BBCodeParser.isValidKey(options, 'handleOverlappingCodes')? !!options.handleOverlappingCodes : _handleOverlappingCodes;
+			_escapeContentOutput = BBCodeParser.isValidKey(options, 'escapeContentOutput')? !!options.escapeContentOutput : _escapeContentOutput;
+			_codeStartSymbol = options.codeStartSymbol || _codeStartSymbol;
+			_codeEndSymbol = options.codeEndSymbol || _codeEndSymbol;
 
-		if(allOrNothing === true || allOrNothing === false) _allOrNothing = allOrNothing;
-		if(handleOverlappingCodes === true || handleOverlappingCodes === false) _handleOverlappingCodes = handleOverlappingCodes;
-		if(escapeContentOutput === true || escapeContentOutput === false) _escapeContentOutput = escapeContentOutput;
-		if(codeStartSymbol) _codeStartSymbol = codeStartSymbol;
-		if(codeEndSymbol) _codeEndSymbol = codeEndSymbol;
-
-		if(PHPC.count(_bbCodes) === 0) {
-			setupDefaultCodes();
-		}
-
-		// Copy settings
-		var key;
-		if(!settings) settings = {};
-		for(key in settings) {
-			value = settings[key];
-			_settings[key] = value + '';
-		}
-
-		// Copy passed code implementations
-		if(!codes) codes = {};
-		if(supplementDefaults) {
-			for(key in codes) {
-				value = codes[key];
-				if(value instanceof BBCode) {
-					_bbCodes[key] = value;
+			// Copy settings
+			var key;
+			if(options.settings) {
+				for(key in options.settings) {
+					value = options.settings[key];
+					_settings[key] = value + '';
 				}
 			}
-		} else {
-			_bbCodes = codes;
 
-			// If no global bb-code implementation, provide a default one.
-			if(!BBCodeParser.isValidKey(_bbCodes, 'GLOBAL') || !(_bbCodes['GLOBAL'] instanceof BBCode)) {
-				_bbCodes['GLOBAL'] = new DefaultGlobalBBCode();
+			// Copy passed code implementations
+			if(options.codes && !options.replaceDefaults) {
+
+				for(key in options.codes) {
+					value = options.codes[key];
+
+					if(value instanceof BBCode) {
+						_bbCodes[key] = value;
+					}
+				}
+			} else {
+				_bbCodes = PHPC.copy(options.codes) || {};
 			}
 		}
 
-		// If allowed codes is null, make it the same as specifying all the codes
-		var count = PHPC.count(allowedCodes), i;
-		if(count > 0) {
-			for(i = 0; i < count; i++) {
-				_allowedCodes.push(allowedCodes[i] + '');
-			}
-		} else if(allowedCodes === null) {
+		_bbCodeCount = PHPC.count(_bbCodes);
+
+		// If no global bb-code implementation, provide a default one.
+		if(!BBCodeParser.isValidKey(_bbCodes, 'GLOBAL') || !(_bbCodes['GLOBAL'] instanceof BBCode)) {
+
+			// This should not affect the bb-code count as if it is the only bb-code, the effect is
+			// the same as if no bb-codes were allowed / supplied.
+			_bbCodes['GLOBAL'] = new DefaultGlobalBBCode();
+		}
+
+		if(options && options.allowedCodes && options.allowedCodes.slice) {
+			_allowedCodes = options.allowedCodes.slice(0);
+		} else {
 			for(key in _bbCodes) {
-				_allowedCodes.push(key + '');
+				_allowedCodes.push(key);
 			}
 		}
 
@@ -344,22 +356,14 @@
 
 		// Parses and replaces allowed BBCodes with the settings given when this parser was created
 		// allOrNothing, handleOverlapping, and escapeContentOutput can be overridden per call
-		this.format = function(input, allOrNothing, handleOverlappingCodes, escapeContentOutput) {
+		this.format = function(input, options) {
 
-			// Copy over defaults if no overrides given
-			if(allOrNothing !== true && allOrNothing !== false) {
-				allOrNothing = _allOrNothing;
-			}
-			if(handleOverlappingCodes !== true && handleOverlappingCodes !== false) {
-				handleOverlappingCodes = _handleOverlappingCodes;
-			}
-			if(escapeContentOutput !== true && escapeContentOutput !== false) {
-				escapeContentOutput = _escapeContentOutput;
-			}
+			var allOrNothing = BBCodeParser.isValidKey(options, 'allOrNothing')? !!options.allOrNothing : _allOrNothing;
+			var handleOverlappingCodes = BBCodeParser.isValidKey(options, 'handleOverlappingCodes')? !!options.handleOverlappingCodes : _handleOverlappingCodes;
+			var escapeContentOutput = BBCodeParser.isValidKey(options, 'escapeContentOutput')? !!options.escapeContentOutput : _escapeContentOutput;
 
 			// Why bother parsing if there's no codes to find?
-			var moreThanDefaultGlobal = PHPC.count(_bbCodes) - ((_bbCodes['GLOBAL'] instanceof DefaultGlobalBBCode)? 1 : 0) > 0;
-			if(PHPC.count(_allowedCodes) > 0 && PHPC.count(_bbCodes) > 0 && moreThanDefaultGlobal) {
+			if(_bbCodeCount > 0 && _allowedCodes.length > 0) {
 				return state_replace(input, _allowedCodes, _settings, _bbCodes, allOrNothing, handleOverlappingCodes, escapeContentOutput, _codeStartSymbol, _codeEndSymbol);
 			}
 
@@ -430,9 +434,9 @@
 
 						// Check for codes with no implementation and codes which aren't allowed
 						if(!BBCodeParser.isValidKey(codes, codeDisplayName)) {
-							queue[PHPC.count(queue) - 1].status = BBCodeParser_Token.NOIMPLFOUND;
+							queue[queue.length - 1].status = BBCodeParser_Token.NOIMPLFOUND;
 						} else if(!PHPC.in_array(codeDisplayName, allowedCodes)) {
-							queue[PHPC.count(queue) - 1].status = BBCodeParser_Token.NOTALLOWED;
+							queue[queue.length - 1].status = BBCodeParser_Token.NOTALLOWED;
 						}
 
 					} else if(code === '') {
@@ -447,7 +451,7 @@
 				}
 
 				// Find/mark all valid start/end code pairs
-				var count = PHPC.count(queue);
+				var count = queue.length;
 				for(i = 0; i < count; i++) {
 					var token = queue[i];
 
@@ -481,7 +485,7 @@
 								}
 
 								// Handle valid end codes, mark others invalid
-								if(start === false || queue[start].content !== content) {
+								if(start === -1 || queue[start].content !== content) {
 									token.status = BBCodeParser_Token.INVALID;
 								} else {
 									token.status = BBCodeParser_Token.VALID;
@@ -509,7 +513,7 @@
 					// Escape content tokens via their parent's escaping function
 					if(token.type === BBCodeParser_Token.CONTENT) {
 						parent = state__findStartCodeWithStatus(queue, BBCodeParser_Token.VALID, i);
-						output += (!escapeContentOutput)? token.content : (parent === false || !BBCodeParser.isValidKey(codes, queue[parent].content))? codes['GLOBAL'].escape(settings, token.content) : codes[queue[parent].content].escape(settings, token.content);
+						output += (!escapeContentOutput)? token.content : (parent === -1 || !BBCodeParser.isValidKey(codes, queue[parent].content))? codes['GLOBAL'].escape(settings, token.content) : codes[queue[parent].content].escape(settings, token.content);
 
 					// Handle start codes
 					} else if(token.type === BBCodeParser_Token.CODE_START) {
@@ -523,7 +527,7 @@
 							   (codes[token.content].canHaveArgument() && !codes[token.content].isValidArgument(settings, token.argument)) || 
 							   (!codes[token.content].canHaveArgument() && token.argument) ||
 							   (codes[token.content].mustHaveArgument() && !token.argument) ||
-							   (parent !== false && !codes[queue[parent].content].canHaveCodeContent())) {
+							   (parent !== -1 && !codes[queue[parent].content].canHaveCodeContent())) {
 
 								token.status = BBCodeParser_Token.INVALID;
 								// Both tokens in the pair should be marked
@@ -535,7 +539,7 @@
 								if(allOrNothing) return input;
 							}
 
-							parent = (parent === false)? 'GLOBAL' : queue[parent].content;
+							parent = (parent === -1)? 'GLOBAL' : queue[parent].content;
 						}
 
 						// Check the parent code too ... some codes are only used within other codes
@@ -558,10 +562,9 @@
 
 							// Remove the closing code, close all open codes
 							if(handleOverlappingCodes) {
-								var scount = PHPC.count(stack);
 
 								// Codes must be closed in the same order they were opened
-								for(var j = scount - 1; j >= 0; j--) {
+								for(var j = stack.length - 1; j >= 0; j--) {
 									var jtoken = stack[j];
 									output += codes[jtoken.content].close(settings, jtoken.argument, (jtoken.content === content)? null : content);
 								}
@@ -576,9 +579,8 @@
 
 							// Now reopen all remaing codes
 							if(handleOverlappingCodes) {
-								var scount = PHPC.count(stack);
 
-								for(var j = 0; j < scount; j++) {
+								for(var j = 0; j < stack.length; j++) {
 									var jtoken = stack[j];
 									output += codes[jtoken.content].open(settings, jtoken.argument, (jtoken.content === content)? null : content);
 								}
@@ -605,7 +607,7 @@
 				index = i;
 			}
 
-			return (found)? index : false;
+			return (found)? index : -1;
 		};
 
 		// Finds the closest valid parent with a certain content to the given position, working backwards
@@ -620,7 +622,7 @@
 				index = i;
 			}
 
-			return (found)? index : false;
+			return (found)? index : -1;
 		};
 
 		// Find the parent start-code of another code
@@ -635,7 +637,7 @@
 				index = i;
 			}
 
-			return (found)? index : false;
+			return (found)? index : -1;
 		};
 
 		// Removes the given value from an array (match found by reference)
@@ -643,7 +645,7 @@
 			if(first === undefined) first = false;
 
 			found = false;
-			count = PHPC.count(stack);
+			count = stack.length;
 
 			for(i = 0; i < count && !found; i++) {
 				if(stack[i] === match) {
@@ -659,9 +661,9 @@
 		};
 
 	}
-	// Whether or not a key in an array is valid or not (is set, and is not null)
+	// Whether or not a key in an array is valid or not (is set, and is not undefined or null)
 	BBCodeParser.isValidKey = function(array, key) {
-		return array[key] !== undefined && array[key] !== null;
+		return key in array && array[key] !== undefined && array[key] !== null;
 	};
 
 
@@ -1129,8 +1131,15 @@
 		this.getAutoCloseCodeOnClose = function() { return null; }
 		this.isValidArgument = function(settings, argument) {
 			if(argument === null || argument === undefined) return true;
+
 			var args = argument.split('x');
-			return PHPC.count(args) === 2 && PHPC.floatval(args[0]) === floor(PHPC.floatval(args[0])) && PHPC.floatval(args[1]) === floor(PHPC.floatval(args[1]));
+			if(args.length === 2) {
+
+				var width = PHPC.floatval(args[0]);
+				var height = PHPC.floatval(args[1]);
+				return (width === Math.floor(width) && height === Math.floor(height));
+			}
+			return false;
 		}
 		this.isValidParent = function(settings, parent) { return true; }
 		this.escape = function(settings, content) { return PHPC.htmlspecialchars(content); }
