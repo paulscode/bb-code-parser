@@ -11,7 +11,7 @@
 		"name" : "configuration with different font size unit",
 		"key" : "fontsize",
 		"constructorArgument" : {
-			settings : {
+			"settings" : {
 				"FontSizeUnit" : "px"
 			}
 		}
