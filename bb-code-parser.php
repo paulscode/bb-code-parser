@@ -135,7 +135,7 @@
 	class BBCodeParser {
 
 		private $bbCodes = array();
-        private $bbCodeCount = 0;
+		private $bbCodeCount = 0;
 
 		// Mapped Array with all the default implementations of BBCodes.
 		// It is not advised this be edited directly as this will affect all other calls.
@@ -200,6 +200,7 @@
 		// See the constructor comment for details
 		private $allOrNothing = true;
 		private $handleOverlappingCodes = false;
+		private $escapeContentOutput = true;
 		private $codeStartSymbol = '[';
 		private $codeEndSymbol = ']';
 
