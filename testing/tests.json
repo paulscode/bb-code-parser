@@ -4,16 +4,18 @@
 	               "Whitebox testing may be added in the future to directly verify the parser, but this is the first step in testing this library.",
 	               "Tests with no 'run' array are run for all configurations and tests with no 'stop' array are stopped for none.",
 	               "'stop' is ignored if 'run' is present, as it makes no sense to stop a test on configurations for which it would never run." ],
-        "unitConfigurations" : [ {
+	"unitConfigurations" : [ {
 		"name" : "default configuration",
 		"key" : "default"
 	}, {
 		"name" : "configuration with different font size unit",
 		"key" : "fontsize",
-		"constructorArguments" : [ null, {
-			"FontSizeUnit" : "px"
-		} ]
-        } ],
+		"constructorArgument" : {
+			settings : {
+				"FontSizeUnit" : "px"
+			}
+		}
+	} ],
 	"unitTests" : [ {
 		"name" : "simple built-in codes",
 		"unitTests" : [ {

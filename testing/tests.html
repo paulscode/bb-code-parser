@@ -66,10 +66,7 @@
 
 							var parser, test;
 							beforeEach(function () {
-								// Can't apply a constructor, this is as close as it gets. Not all "class"-
-								// functions support this. Native ones are least likely to work this way.
-								parser = new BBCodeParser();
-								BBCodeParser.apply(parser, configuration.constructorArguments);
+								parser = new BBCodeParser(configuration.constructorArgument);
 							});
 
 							for (test in unitTests) {
@@ -85,8 +82,7 @@
 										it(test.name, (function (test) {
 											return function () {
 
-												expect(parser.format.apply(parser, [ test.input ]
-														.concat(configuration.formatArguments)))
+												expect(parser.format.apply(parser, [ test.input, configuration.formatArgument ]))
 														.toEqual(test.error ? test.input : test.result);
 											};
 										}(test)));
@@ -102,9 +98,6 @@
 				for (configuration in request.unitConfigurations) {
 
 					configuration = request.unitConfigurations[configuration];
-					configuration.constructArguments = configuration.constructorArguments || [];
-					configuration.formatArguments = configuration.formatArguments || [];
-
 					setupConfiguration(configuration.name, configuration, request.unitTests);
 				}
 
