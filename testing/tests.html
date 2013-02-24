@@ -82,7 +82,7 @@
 										it(test.name, (function (test) {
 											return function () {
 
-												expect(parser.format.apply(parser, [ test.input, configuration.formatArgument ]))
+												expect(parser.format(test.input, configuration.formatArgument))
 														.toEqual(test.error ? test.input : test.result);
 											};
 										}(test)));
