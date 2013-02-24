@@ -261,16 +261,16 @@
 				$this->codeEndSymbol = BBCodeParser::isValidKey($options, 'codeEndSymbol')? $options['codeEndSymbol'] : $this->codeEndSymbol;
 
 				// Copy settings
-				if($options['settings']) {
+				if(BBCodeParser::isValidKey($options, 'settings')) {
 					foreach($options['settings'] as $key => $value) {
 						$this->settings[$key] = $value.'';
 					}
 				}
 
 				// Copy passed code implementations
-				if($options['codes']) {
+				if(BBCodeParser::isValidKey($options, 'codes')) {
 
-					if ($options['replaceDefaults']) {
+					if(BBCodeParser::isValidKey($options, 'replaceDefaults') && $options['replaceDefaults']) {
 						$this->bbCodes = $options['codes'];
 					} else {
 						foreach($options['codes'] as $key => $value) {
@@ -626,7 +626,7 @@
 
 		// Whether or not a key in an array is valid or not (is set, and is not null)
 		public static function isValidKey(&$array, $key) {
-			return isset($array[$key]);
+			return array_key_exists($key, $array) && isset($array[$key]);
 		}
 
 	}
