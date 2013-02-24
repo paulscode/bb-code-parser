@@ -358,9 +358,9 @@
 		// allOrNothing, handleOverlapping, and escapeContentOutput can be overridden per call
 		this.format = function(input, options) {
 
-			var allOrNothing = BBCodeParser.isValidKey(options, 'allOrNothing')? !!options.allOrNothing : _allOrNothing;
-			var handleOverlappingCodes = BBCodeParser.isValidKey(options, 'handleOverlappingCodes')? !!options.handleOverlappingCodes : _handleOverlappingCodes;
-			var escapeContentOutput = BBCodeParser.isValidKey(options, 'escapeContentOutput')? !!options.escapeContentOutput : _escapeContentOutput;
+			var allOrNothing = (options && BBCodeParser.isValidKey(options, 'allOrNothing'))? !!options.allOrNothing : _allOrNothing;
+			var handleOverlappingCodes = (options && BBCodeParser.isValidKey(options, 'handleOverlappingCodes'))? !!options.handleOverlappingCodes : _handleOverlappingCodes;
+			var escapeContentOutput = (options && BBCodeParser.isValidKey(options, 'escapeContentOutput'))? !!options.escapeContentOutput : _escapeContentOutput;
 
 			// Why bother parsing if there's no codes to find?
 			if(_bbCodeCount > 0 && _allowedCodes.length > 0) {
