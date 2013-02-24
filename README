@@ -25,3 +25,5 @@ the top of either the PHP or JS bb-code parser file for how to use this library.
 Please note in version 1.0 the way options are passed to the constructor and format
 method has changed. The last version with the old API is available as tag v.9 under
 the downloads section.
+
+(Use the 1.0.1 tag. The 1.0 tag is rather broke for the PHP version.)
