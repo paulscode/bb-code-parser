@@ -274,7 +274,7 @@
 						$this->bbCodes = $options['codes'];
 					} else {
 						foreach($options['codes'] as $key => $value) {
-							if ($value instanceof BBCode) {
+							if($value instanceof BBCode) {
 								$this->bbCodes[$key] = $value;
 							}
 						}

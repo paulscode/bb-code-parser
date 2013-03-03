@@ -163,7 +163,7 @@
 		},
 		// Not really a function in PHP, just a fact of how its = operator copies arrays by default.
 		copy: function(value) {
-			if (!value) return value;
+			if(!value) return value;
 
 			var result = {};
 			for (var key in value) {
@@ -300,7 +300,7 @@
 
 		setupDefaultCodes();
 
-		if (options) {
+		if(options) {
 			_allOrNothing = BBCodeParser.isValidKey(options, 'allorNothing')? !!options.allOrNothing : _allOrNothing;
 			_handleOverlappingCodes = BBCodeParser.isValidKey(options, 'handleOverlappingCodes')? !!options.handleOverlappingCodes : _handleOverlappingCodes;
 			_escapeContentOutput = BBCodeParser.isValidKey(options, 'escapeContentOutput')? !!options.escapeContentOutput : _escapeContentOutput;
@@ -319,7 +319,7 @@
 			// Copy passed code implementations
 			if(options.codes) {
 
-				if (options.replaceDefaults) {
+				if(options.replaceDefaults) {
 					_bbCodes = PHPC.copy(options.codes);
 				} else {
 					for(key in options.codes) {
