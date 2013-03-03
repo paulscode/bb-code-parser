@@ -963,7 +963,7 @@
 				$box  = '<div style="display: block; margin-bottom: .5em; border: '.htmlspecialchars($settings['QuoteBorder']).'; background-color: '.htmlspecialchars($settings['QuoteBackground']).'">';
 				$box .= '<div style="display: block; width: 100%; text-indent: .25em; border-bottom: '.htmlspecialchars($settings['QuoteBorder']).'; background-color: '.htmlspecialchars($settings['QuoteTitleBackground']).'">';
 				$box .= 'QUOTE';
-				if($argument) $box.= ' by '.htmlspecialchars($argument);
+				if($argument) $box .= ' by '.htmlspecialchars($argument);
 				$box .= '</div>';
 				$box .= '<div ';
 				if($argument) $box .= 'class="'.htmlspecialchars(str_replace('${by}', $argument, $settings['QuoteCSSClassName'])).'" ';
@@ -993,7 +993,7 @@
 				$box  = '<div style="display: block; margin-bottom: .5em; border: '.htmlspecialchars($settings['CodeBorder']).'; background-color: '.htmlspecialchars($settings['CodeBackground']).'">';
 				$box .= '<div style="display: block; width: 100%; text-indent: .25em; border-bottom: '.htmlspecialchars($settings['CodeBorder']).'; background-color: '.htmlspecialchars($settings['CodeTitleBackground']).'">';
 				$box .= 'CODE';
-				if($argument) $box.= ' ('.htmlspecialchars($argument).')';
+				if($argument) $box .= ' ('.htmlspecialchars($argument).')';
 				$box .= '</div><pre ';
 				if($argument) $box .= 'class="'.htmlspecialchars(str_replace('${lang}', $argument, $settings['CodeCSSClassName'])).'" ';
 				$box .= 'style="overflow-x: auto; margin: 0; font-family: monospace; white-space: pre-wrap; padding: .25em">';
@@ -1023,7 +1023,7 @@
 				$box  = '<div style="display: block; margin-bottom: .5em; border: '.htmlspecialchars($settings['CodeBorder']).'; background-color: '.htmlspecialchars($settings['CodeBackground']).'">';
 				$box .= '<div style="display: block; width: 100%; text-indent: .25em; border-bottom: '.htmlspecialchars($settings['CodeBorder']).'; background-color: '.htmlspecialchars($settings['CodeTitleBackground']).'">';
 				$box .= 'CODE';
-				if($argument) $box.= ' ('.htmlspecialchars($argument).')';
+				if($argument) $box .= ' ('.htmlspecialchars($argument).')';
 				$box .= '</div><pre ';
 				if($argument) $box .= 'class="'.htmlspecialchars(str_replace('${lang}', $argument, $settings['CodeCSSClassName'])).'" ';
 				$box .= 'style="height: 29ex; overflow-y: auto; margin: 0; font-family: monospace; white-space: pre-wrap; padding: .25em">';

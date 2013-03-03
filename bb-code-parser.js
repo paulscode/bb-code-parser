@@ -1019,7 +1019,7 @@
 				var box  = '<div style="display: block; margin-bottom: .5em; border: ' + PHPC.htmlspecialchars(settings['QuoteBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['QuoteBackground']) + '">';
 				box += '<div style="display: block; width: 100%; text-indent: .25em; border-bottom: ' + PHPC.htmlspecialchars(settings['QuoteBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['QuoteTitleBackground']) + '">';
 				box += 'QUOTE';
-				if(argument) box+= ' by ' + PHPC.htmlspecialchars(argument);
+				if(argument) box += ' by ' + PHPC.htmlspecialchars(argument);
 				box += '</div>';
 				box += '<div ';
 				if(argument) box += 'class="' + PHPC.htmlspecialchars(settings['QuoteCSSClassName'].replace('{by}', argument));
@@ -1052,7 +1052,7 @@
 				var box  = '<div style="display: block; margin-bottom: .5em; border: ' + PHPC.htmlspecialchars(settings['CodeBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['CodeBackground']) + '">';
 				box += '<div style="display: block; width: 100%; text-indent: .25em; border-bottom: ' + PHPC.htmlspecialchars(settings['CodeBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['CodeTitleBackground']) + '">';
 				box += 'CODE';
-				if(argument) box+= ' (' + PHPC.htmlspecialchars(argument) + ')';
+				if(argument) box += ' (' + PHPC.htmlspecialchars(argument) + ')';
 				box += '</div><pre ';
 				if(argument) box += 'class="' + PHPC.htmlspecialchars(str_replace('{lang}', argument, settings['CodeCSSClassName'])) + '" ';
 				box += 'style="overflow-x: auto; margin: 0; font-family: monospace; white-space: pre-wrap; padding: .25em">';
@@ -1085,7 +1085,7 @@
 				var box  = '<div style="display: block; margin-bottom: .5em; border: ' + PHPC.htmlspecialchars(settings['CodeBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['CodeBackground']) + '">';
 				box += '<div style="display: block; width: 100%; text-indent: .25em; border-bottom: ' + PHPC.htmlspecialchars(settings['CodeBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['CodeTitleBackground']) + '">';
 				box += 'CODE';
-				if(argument) box+= ' (' + PHPC.htmlspecialchars(argument) + ')';
+				if(argument) box += ' (' + PHPC.htmlspecialchars(argument) + ')';
 				box += '</div><pre ';
 				if(argument) box += 'class="' + PHPC.htmlspecialchars(str_replace('{lang}', argument, settings['CodeCSSClassName'])) + '" ';
 				box += 'style="height: 29ex; overflow-y: auto; margin: 0; font-family: monospace; white-space: pre-wrap; padding: .25em">';
