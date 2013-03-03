@@ -188,12 +188,12 @@
 	   settings is a mapped array of settings which various formatter implementations may use to control output.
 	       Default: use built in default settings
 
-	   $codes is a map of "display names" to implementations of BBCode which are used to format output.
+	   codes is a map of "display names" to implementations of BBCode which are used to format output.
 	          Any codes with the same name as a default will replace the default implementation. If you also
 	          specify allowedCodes, don't forget to include these.
 	       Default: no supplementary codes
 
-	   $replaceDefaults indicates whether the previous codes map should be used in place of all the defaults
+	   replaceDefaults indicates whether the previous codes map should be used in place of all the defaults
 	                    instead of supplementing it. If this is set to true, and no GLOBAL code implementation is
 	                    provided in the codes map, a default one will be provided that just returns content given
 	                    to it unescaped.
