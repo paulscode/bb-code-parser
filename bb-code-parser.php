@@ -186,7 +186,7 @@
 			'CodeBackground'           => 'white',
 			'CodeCSSClassName'         => 'codebox-${lang}', /* ${lang} is the code parameter ex: [code=PHP], ${lang} = php */
 			'LinkUnderline'            => true,
-			'LinkColor'                => 'blue',
+			'LinkColor'                => 'blue'//,
 			/*'ImageWidthMax'            => 640,*/ // Uncomment these to tell the BB-Code parser to use them
 			/*'ImageHeightMax'           => 480,*/ // The default is to allow any size image
 			/*'UnorderedListDefaultType' => 'circle',*/ // Uncomment these to tell the BB-Code parser to use this
