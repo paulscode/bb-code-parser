@@ -414,7 +414,7 @@
 							if(BBCodeParser.isValidKey(codes, codeNoSlash) && (autoCloseCode = codes[codeNoSlash].getAutoCloseCodeOnClose()) &&
 							   BBCodeParser.isValidKey(codes, autoCloseCode) && PHPC.in_array(autoCloseCode, stack)) {
 
-								stack = array_remove(stack, autoCloseCode, true);
+								array_remove(stack, autoCloseCode, true);
 								queue.push(new BBCodeParser_Token(BBCodeParser_Token.CODE_END, '/' + autoCloseCode));
 							}
 
@@ -426,7 +426,7 @@
 							if(BBCodeParser.isValidKey(codes, codeDisplayName) && (autoCloseCode = codes[codeDisplayName].getAutoCloseCodeOnOpen()) &&
 							   BBCodeParser.isValidKey(codes, autoCloseCode) && PHPC.in_array(autoCloseCode, stack)) {
 
-								stack = array_remove(stack, autoCloseCode, true);
+								array_remove(stack, autoCloseCode, true);
 								queue.push(new BBCodeParser_Token(BBCodeParser_Token.CODE_END, '/' + autoCloseCode));
 							}
 
@@ -572,7 +572,7 @@
 								}
 
 								// Removes matching open code
-								stack = array_remove(stack, queue[token.matches], true);
+								array_remove(stack, queue[token.matches], true);
 							} else {
 
 								// Close the current code
@@ -643,15 +643,13 @@
 
 			for(i = 0; i < count && !found; i++) {
 				if(stack[i] === match) {
-					stack = stack.splice(stack, i, 1);
+					stack.splice(stack, i, 1);
 
 					found = true && first;
 					count--;
 					i--;
 				}
 			}
-
-			return stack;
 		};
 
 	}
