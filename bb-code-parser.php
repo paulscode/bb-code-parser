@@ -560,32 +560,26 @@
 
 		// Finds the closest valid parent with a certain content to the given position, working backwards
 		private function state__findStartCodeOfType(&$queue, $content, $position) {
-			$found = false;
-			$index = -1;
 
-			for($i = $position - 1; $i >= 0 && !$found; $i--) {
-				$found = $queue[$i]->type === BBCodeParser_Token::$CODE_START &&
-				         $queue[$i]->status === BBCodeParser_Token::$UNDETERMINED &&
-						 $queue[$i]->content === $content;
-				$index = $i;
+			for($i = $position - 1; $i >= 0; $i--) {
+				if($queue[$i]->type === BBCodeParser_Token::$CODE_START &&  $queue[$i]->status === BBCodeParser_Token::$UNDETERMINED &&
+						$queue[$i]->content === $content) {
+					return $i;
+				}
 			}
-
-			return ($found)? $index : -1;
+			return -1;
 		}
 
 		// Find the parent start-code of another code
 		private function state__findParentStartCode(&$queue, $position) {
-			$found = false;
-			$index = -1;
 
-			for($i = $position - 1; $i >= 0 && !$found; $i--) {
-				$found = $queue[$i]->type === BBCodeParser_Token::$CODE_START &&
-				         $queue[$i]->status === BBCodeParser_Token::$VALID &&
-						 $queue[$i]->matches > $position;
-				$index = $i;
+			for($i = $position - 1; $i >= 0; $i--) {
+				if($queue[$i]->type === BBCodeParser_Token::$CODE_START && $queue[$i]->status === BBCodeParser_Token::$VALID &&
+						$queue[$i]->matches > $position;
+					return $i;
+				}
 			}
-
-			return ($found)? $index : -1;
+			return -1;
 		}
 
 		// Removes the given value from an array (match found by reference)

@@ -601,45 +601,37 @@
 
 		// Finds the closest parent with a certain status to the given position, working backwards
 		function state__findStartCodeWithStatus(queue, status, position) {
-			var found = false;
-			var index = -1;
 
-			for(var i = position - 1; i >= 0 && !found; i--) {
-				found = queue[i].type === BBCodeParser_Token.CODE_START && queue[i].status === status;
-				index = i;
+			for(var i = position - 1; i >= 0; i--) {
+				if(queue[i].type === BBCodeParser_Token.CODE_START && queue[i].status === status) {
+					return i;
+				}
 			}
-
-			return (found)? index : -1;
+			return -1;
 		};
 
 		// Finds the closest valid parent with a certain content to the given position, working backwards
 		function state__findStartCodeOfType(queue, content, position) {
-			var found = false;
-			var index = -1;
 
-			for(var i = position - 1; i >= 0 && !found; i--) {
-				found = queue[i].type === BBCodeParser_Token.CODE_START &&
-				        queue[i].status === BBCodeParser_Token.UNDETERMINED &&
-					queue[i].content === content;
-				index = i;
+			for(var i = position - 1; i >= 0; i--) {
+				if(queue[i].type === BBCodeParser_Token.CODE_START && queue[i].status === BBCodeParser_Token.UNDETERMINED &&
+						queue[i].content === content) {
+					return i;
+				}
 			}
-
-			return (found)? index : -1;
+			return -1;
 		};
 
 		// Find the parent start-code of another code
 		function state__findParentStartCode(queue, position) {
-			var found = false;
-			var index = -1;
 
 			for(var i = position - 1; i >= 0 && !found; i--) {
-				found = queue[i].type === BBCodeParser_Token.CODE_START &&
-				        queue[i].status === BBCodeParser_Token.VALID &&
-					queue[i].matches > position;
-				index = i;
+				if(queue[i].type === BBCodeParser_Token.CODE_START && queue[i].status === BBCodeParser_Token.VALID &&
+						queue[i].matches > position) {
+					return i;
+				}
 			}
-
-			return (found)? index : -1;
+			return -1;
 		};
 
 		// Removes the given value from an array (match found by reference)
