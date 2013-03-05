@@ -129,7 +129,7 @@
 	}
 
 	// PHP Compat functions
-	this.PHPC = {
+	var PHPC = {
 		count: function(value) {
 			var count = 0;
 			for(var i in value) {
