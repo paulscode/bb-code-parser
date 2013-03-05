@@ -547,15 +547,13 @@
 
 		// Finds the closest parent with a certain status to the given position, working backwards
 		private function state__findStartCodeWithStatus(&$queue, $status, $position) {
-			$found = false;
-			$index = -1;
 
-			for($i = $position - 1; $i >= 0 && !$found; $i--) {
-				$found = $queue[$i]->type === BBCodeParser_Token::$CODE_START && $queue[$i]->status === $status;
-				$index = $i;
+			for($i = $position - 1; $i >= 0; $i--) {
+				if($queue[$i]->type === BBCodeParser_Token::$CODE_START && $queue[$i]->status === $status) {
+					return $i;
+				}
 			}
-
-			return ($found)? $index : -1;
+			return -1;
 		}
 
 		// Finds the closest valid parent with a certain content to the given position, working backwards
@@ -575,7 +573,7 @@
 
 			for($i = $position - 1; $i >= 0; $i--) {
 				if($queue[$i]->type === BBCodeParser_Token::$CODE_START && $queue[$i]->status === BBCodeParser_Token::$VALID &&
-						$queue[$i]->matches > $position;
+						$queue[$i]->matches > $position) {
 					return $i;
 				}
 			}
