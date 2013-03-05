@@ -626,7 +626,7 @@
 		// Find the parent start-code of another code
 		function state__findParentStartCode(queue, position) {
 
-			for(var i = position - 1; i >= 0 && !found; i--) {
+			for(var i = position - 1; i >= 0; i--) {
 				if(queue[i].type === BBCodeParser_Token.CODE_START && queue[i].status === BBCodeParser_Token.VALID &&
 						queue[i].matches > position) {
 					return i;
@@ -639,14 +639,15 @@
 		function array_remove(stack, match, first) {
 			if(first === undefined) first = false;
 
-			found = false;
 			count = stack.length;
+			for(i = 0; i < count; i++) {
 
-			for(i = 0; i < count && !found; i++) {
 				if(stack[i] === match) {
 					stack.splice(stack, i, 1);
 
-					found = true && first;
+					if(first) {
+						return;
+					}
 					count--;
 					i--;
 				}

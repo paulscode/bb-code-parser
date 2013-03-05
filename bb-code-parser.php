@@ -604,14 +604,16 @@
 
 		// Removes the given value from an array (match found by reference)
 		private function array_remove(&$stack, $match, $first=false) {
-			$found = false;
-			$count = count($stack);
 
-			for($i = 0; $i < $count && !$found; $i++) {
+			$count = count($stack);
+			for($i = 0; $i < $count; $i++) {
+
 				if($stack[$i] === $match) {
 					array_splice($stack, $i, 1);
 
-					$found = true && $first;
+					if($first) {
+						return;
+					}
 					$count--;
 					$i--;
 				}
