@@ -144,11 +144,12 @@
 				return haystack.indexOf(needle) !== -1;
 			}
 
-			var found = false;
-			for(var i = 0; i < haystack.length && !found; i++) {
-				found = haystack[i] === needle;
+			for(var i = 0; i < haystack.length; i++) {
+				if(haystack[i] === needle) {
+					return true;
+				}
 			}
-			return found;
+			return false;
 		},
 		floatval: function(value) {
 			return parseFloat(value) || 0;
