@@ -27,3 +27,31 @@ method has changed. The last version with the old API is available as tag v.9 un
 the downloads section.
 
 (Use the 1.0.1 tag. The 1.0 tag is rather broke for the PHP version.)
+
+
+-----------------------------------------------------------------------------------
+Python port notes
+-----------------
+
+Currently only Py3k+ is explicitly supported and tested. If you require Python 2.7
+support and the library as it stands does not work with 2.7, please file a proposal
+in the issue tracker for consideration.
+
+There are some differences in the Python port from the other two versions. They are
+
+  The filename has no dashes because dashes are not a valid Python identifier which
+  is required to be able to import it. It also includes the python version
+  compatibility.
+
+  The library mostly conforms to PEP8. This means underscores_are_used_everywhere.
+  Check pylint.rc for the supressed messages and where formatting might differ from
+  PEP8. Notably there's too many lines, some functions have too many arguments,
+  statements, or variable declarations, and lines are not a max of 80 characters.
+
+  BBCodeParser_MultiTokenizer is known just as MultiTokenizer as in Python the file
+  acts as a suitable namespace without the clutter of actually having to "assign"
+  things to one, like in JS, or the ugly syntax of PHP's namespaces. Well, and PEP8
+  doesn't like underscores in class names.
+
+Any other significant differences not listed here are related to internal members,
+methods, functions, or classes intended to be used by the parser only.
