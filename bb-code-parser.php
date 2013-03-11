@@ -650,7 +650,7 @@
 		public function nextToken($delimiter=' ') {
 
 			if($this->position >= $this->length) {
-				return false;
+				return null;
 			}
 
 			$index = strpos($this->input, $delimiter, $this->position);

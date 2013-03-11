@@ -685,7 +685,7 @@
 			if(delimiter === undefined) delimiter = ' ';
 
 			if(position >= length) {
-				return false;
+				return null;
 			}
 
 			var index = input.indexOf(delimiter, position);
