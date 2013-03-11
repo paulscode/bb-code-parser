@@ -665,7 +665,7 @@
 		}
 
 		public function reset() {
-			$this->position = false;
+			$this->position = 0;
 		}
 
 	}

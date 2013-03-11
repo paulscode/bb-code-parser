@@ -700,7 +700,7 @@
 		}
 
 		this.reset = function() {
-			position = false;
+			position = 0;
 		}
 
 	}
