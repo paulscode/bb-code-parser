@@ -265,23 +265,23 @@
 		var _settings = {
 			'XHTML'                    : false,
 			'FontSizeUnit'             : 'pt',
-			'FontSizeMax'              : 48, /* Set to null to allow any font-size */
-			'ColorAllowAdvFormats'     : false, /* Whether the rgb[a], hsl[a] color formats should be accepted */
+			'FontSizeMax'              : 48,              // Set to null to allow any font-size
+			'ColorAllowAdvFormats'     : false,           // Whether the rgb[a], hsl[a] color formats should be accepted
 			'QuoteTitleBackground'     : '#e4eaf2',
 			'QuoteBorder'              : '1px solid gray',
 			'QuoteBackground'          : 'white',
-			'QuoteCSSClassName'        : 'quotebox-{by}', /* {by} is the quote parameter ex: [quote=Waldo], {by} = Waldo */
+			'QuoteCSSClassName'        : 'quotebox-{by}', // {by} is the quote parameter ex: [quote=Waldo], {by} = Waldo
 			'CodeTitleBackground'      : '#ffc29c',
 			'CodeBorder'               : '1px solid gray',
 			'CodeBackground'           : 'white',
-			'CodeCSSClassName'         : 'codebox-{lang}', /* {lang} is the code parameter ex: [code=PHP], {lang} = php */
+			'CodeCSSClassName'         : 'codebox-{lang}', // {lang} is the code parameter ex: [code=PHP], {lang} = php
 			'LinkUnderline'            : true,
 			'LinkColor'                : 'blue'//,
-			/*'ImageWidthMax'            : 640,*/ // Uncomment these to tell the BB-Code parser to use them
-			/*'ImageHeightMax'           : 480,*/ // The default is to allow any size image
-			/*'UnorderedListDefaultType' : 'circle',*/ // Uncomment these to tell the BB-Code parser to use this
-			/*'OrderedListDefaultType'   : '1',     */ // default type if the given one is invalid **
-			/*'ListDefaultType'          : 'circle' */ // ...
+			//'ImageWidthMax'            : 640,              // Uncomment these to tell the BB-Code parser to use them
+			//'ImageHeightMax'           : 480,              // The default is to allow any size image
+			//'UnorderedListDefaultType' : 'circle',         // Uncomment these to tell the BB-Code parser to use this
+			//'OrderedListDefaultType'   : '1',              // default type if the given one is invalid **
+			//'ListDefaultType'          : 'circle'          // ...
 		};
 		// ** Note that this affects whether a tag is printed out "as is" if a bad argument is given.
 		// It may not affect those tags which can take "" or nothing as their argument
@@ -302,9 +302,9 @@
 		setupDefaultCodes();
 
 		if(options) {
-			_allOrNothing = BBCodeParser.isValidKey(options, 'allorNothing')? !!options.allOrNothing : _allOrNothing;
-			_handleOverlappingCodes = BBCodeParser.isValidKey(options, 'handleOverlappingCodes')? !!options.handleOverlappingCodes : _handleOverlappingCodes;
-			_escapeContentOutput = BBCodeParser.isValidKey(options, 'escapeContentOutput')? !!options.escapeContentOutput : _escapeContentOutput;
+			_allOrNothing = ('allorNothing' in options)? options.allOrNothing : _allOrNothing;
+			_handleOverlappingCodes = ('handleOverlappingCodes' in options)? options.handleOverlappingCodes : _handleOverlappingCodes;
+			_escapeContentOutput = ('escapeContentOutput' in options)? options.escapeContentOutput : _escapeContentOutput;
 			_codeStartSymbol = options.codeStartSymbol || _codeStartSymbol;
 			_codeEndSymbol = options.codeEndSymbol || _codeEndSymbol;
 
@@ -312,8 +312,7 @@
 			var key;
 			if(options.settings) {
 				for(key in options.settings) {
-					value = options.settings[key];
-					_settings[key] = value + '';
+					_settings[key] = options.settings[key];
 				}
 			}
 
@@ -324,11 +323,7 @@
 					_bbCodes = PHPC.copy(options.codes);
 				} else {
 					for(key in options.codes) {
-						value = options.codes[key];
-
-						if(value instanceof BBCode) {
-							_bbCodes[key] = value;
-						}
+						_bbCodes[key] = options.codes[key];
 					}
 				}
 			}
@@ -337,14 +332,14 @@
 		_bbCodeCount = PHPC.count(_bbCodes);
 
 		// If no global bb-code implementation, provide a default one.
-		if(!BBCodeParser.isValidKey(_bbCodes, 'GLOBAL') || !(_bbCodes['GLOBAL'] instanceof BBCode)) {
+		if(!_bbCodes['GLOBAL']) {
 
 			// This should not affect the bb-code count as if it is the only bb-code, the effect is
 			// the same as if no bb-codes were allowed / supplied.
 			_bbCodes['GLOBAL'] = new DefaultGlobalBBCode();
 		}
 
-		if(options && options.allowedCodes && options.allowedCodes.slice) {
+		if(options && options.allowedCodes) {
 			_allowedCodes = options.allowedCodes.slice(0);
 		} else {
 			for(key in _bbCodes) {
@@ -361,9 +356,9 @@
 		// allOrNothing, handleOverlapping, and escapeContentOutput can be overridden per call
 		this.format = function(input, options) {
 
-			var allOrNothing = (options && BBCodeParser.isValidKey(options, 'allOrNothing'))? !!options.allOrNothing : _allOrNothing;
-			var handleOverlappingCodes = (options && BBCodeParser.isValidKey(options, 'handleOverlappingCodes'))? !!options.handleOverlappingCodes : _handleOverlappingCodes;
-			var escapeContentOutput = (options && BBCodeParser.isValidKey(options, 'escapeContentOutput'))? !!options.escapeContentOutput : _escapeContentOutput;
+			var allOrNothing = (options && 'allOrNothing' in options)? options.allOrNothing : _allOrNothing;
+			var handleOverlappingCodes = (options && 'handleOverlappingCodes' in options)? options.handleOverlappingCodes : _handleOverlappingCodes;
+			var escapeContentOutput = (options && 'escapeContentOutput' in options)? options.escapeContentOutput : _escapeContentOutput;
 
 			// Why bother parsing if there's no codes to find?
 			if(_bbCodeCount > 0 && _allowedCodes.length > 0) {
