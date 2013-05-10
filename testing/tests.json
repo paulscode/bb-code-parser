@@ -12,7 +12,7 @@
 		"key" : "fontsize",
 		"constructorArgument" : {
 			"settings" : {
-				"FontSizeUnit" : "px"
+				"FontSizeUnit" : "em"
 			}
 		}
 	} ],
@@ -42,12 +42,12 @@
 			"name" : "font size default unit",
 			"run" : [ "default" ],
 			"input" : "[size=16]text[/size]",
-			"result" : "<span style=\"font-size: 16pt\">text</span>"
+			"result" : "<span style=\"font-size: 16px\">text</span>"
 		}, {
 			"name" : "font size non-default unit",
 			"run" : [ "fontsize" ],
 			"input" : "[size=16]text[/size]",
-			"result" : "<span style=\"font-size: 16px\">text</span>"
+			"result" : "<span style=\"font-size: 16em\">text</span>"
 		} ]
 	}, {
 		"name" : "no codes in input",

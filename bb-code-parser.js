@@ -49,32 +49,34 @@
 		var parser = new BBCodeParser();
 		var output = parser.format(input);
 
-		// Specify allowed codes
+		// Specify the allowed codes
 		var parser = new BBCodeParser({
 			allowedCodes : ['b', 'i', 'u']
 		});
 		var output = parser.format(input);
 
-		// Replace all allowed codes with custom settings (not all codes have settings)
+		// Replace the implementation for 'Bold'. This is a noop as written, but shows how
+		// to replace built-ins with custom implementations if so wished.
 		var parser = new BBCodeParser({
-			allowedCodes : ['b', 'i', 'u'],
-			settings : {
-				'FontSizeUnit' : 'px'
-			}
-		});
-		var output = parser.format(input);
-
-		// Replace the implementation for 'Bold'
-		var parser = new BBCodeParser({
-			allowedCodes : ['b', 'i', 'u'],
-			settings : {
-				'FontSizeUnit' : 'px'
-			},
 			codes : {
 				'b' : new HTMLBoldBBCode()
 			}
 		});
 		var output = parser.format(input);
+
+		// Override default settings. Custom settings can be specified to pass along info
+		// to custom BB-code implementations but will be ignored by the default included
+		// implementations.
+		var parser = new BBCodeParser({
+			settings : {
+				'LinkColor' : 'green',
+				'CustomSetting1' : 3
+			}
+		});
+		var output = parser.format(input);
+
+		// The above are just simple examples. Multiple properties can be set and combined
+		// together when instantiating a parser.
 	*/
 
 
@@ -264,7 +266,7 @@
 		// Instead, pass a Mapped Array of only the properties to be overridden to the BBCodeParser_replace function.
 		var _settings = {
 			'XHTML'                    : false,
-			'FontSizeUnit'             : 'pt',
+			'FontSizeUnit'             : 'px',
 			'FontSizeMax'              : 48,              // Set to null to allow any font-size
 			'ColorAllowAdvFormats'     : false,           // Whether the rgb[a], hsl[a] color formats should be accepted
 			'QuoteTitleBackground'     : '#e4eaf2',

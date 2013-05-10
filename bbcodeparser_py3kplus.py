@@ -51,32 +51,34 @@
     parser = BBCodeParser()
     output = parser.format(finput)
 
-    # Replace all allowed codes with default settings
+    # Specify allowed codes
     parser = BBCodeParser({
         allowed_codes: ['b', 'i', 'u']
     })
     output = parser.format(finput)
 
-    # Replace all allowed codes with custom settings (not all codes have settings)
+    # Replace the implementation for 'Bold'. This is a noop as written, but shows how
+    # to replace built-ins with custom implementations if so wished.
     parser = BBCodeParser({
-        allowed_codes: ['b', 'i', 'u'],
-        settings: {
-            'FontSizeUnit': 'px'
-        }
-    })
-    output = parser.format(finput)
-
-    # Replace the implementation for 'Bold'
-    parser = BBCodeParser({
-        allowed_codes: ['b', 'i', 'u'],
-        settings: {
-            'FontSizeUnit': 'px'
-        },
         codes: {
             'b': HTMLBoldBBCode()
         }
     })
     output = parser.format(finput)
+
+    # Override default settings. Custom settings can be specified to pass along info
+    # to custom BB-code implementations but will be ignored by the default included
+    # implementations.
+    parser = new BBCodeParser({
+        settings : {
+            'LinkColor' : 'green',
+            'CustomSetting1' : 3
+        }
+    });
+    output = parser.format(finput);
+    
+    # The above are just simple examples. Multiple properties can be set and combined
+    # together when instantiating a parser.
 """
 
 from abc import ABCMeta
@@ -267,7 +269,7 @@ class BBCodeParser:
         # Instead, pass a Mapped Array of only the properties to be overridden to the BBCodeParser_replace function.
         self.settings = {
                                'XHTML': False,
-                        'FontSizeUnit': 'pt',
+                        'FontSizeUnit': 'px',
                          'FontSizeMax': 48,               # Set to None to allow any font-size
                 'ColorAllowAdvFormats': False,            # Whether the rgb[a], hsl[a] color formats should be accepted
                 'QuoteTitleBackground': '#e4eaf2',

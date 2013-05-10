@@ -51,32 +51,34 @@
 		$parser = new BBCodeParser();
 		$output = $parser->format($input);
 
-		// Replace all allowed codes with default settings
-		$parser = new BBCodeParser({
+		// Specify the allowed codes
+		$parser = new BBCodeParser(array(
 			allowedCodes => array('b', 'i', 'u')
-		});
+		));
 		$output = $parser->format($input);
 
-		// Replace all allowed codes with custom settings (not all codes have settings)
-		$parser = new BBCodeParser({
-			allowedCodes => array('b', 'i', 'u'),
-			settings => array(
-				'FontSizeUnit' => 'px'
-			)
-		});
-		$output = $parser->format($input);
-
-		// Replace the implementation for 'Bold'
-		$parser = new BBCodeParser({
-			allowedCodes => array('b', 'i', 'u'),
-			settings : array(
-				'FontSizeUnit' => 'px'
-			),
-			codes : array(
+		// Replace the implementation for 'Bold'. This is a noop as written, but shows how
+		// to replace built-ins with custom implementations if so wished.
+		$parser = new BBCodeParser(array(
+			codes => array(
 				'b' => new HTMLBoldBBCode()
 			)
-		});
+		));
 		$output = $parser->format($input);
+
+		// Override default settings. Custom settings can be specified to pass along info
+		// to custom BB-code implementations but will be ignored by the default included
+		// implementations.
+		$parser = new BBCodeParser(array(
+			settings => array(
+				'LinkColor' => 'green',
+				'CustomSetting1' => 3
+			)
+		));
+		$output = parser->format(input);
+
+		// The above are just simple examples. Multiple properties can be set and combined
+		// together when instantiating a parser.
 	*/
 
 
