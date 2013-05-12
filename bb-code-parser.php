@@ -176,7 +176,7 @@
 		// Instead, pass a Mapped Array of only the properties to be overridden to the BBCodeParser_replace function.
 		private $settings = array(
 			'XHTML'                    => false,
-			'FontSizeUnit'             => 'pt',
+			'FontSizeUnit'             => 'px',
 			'FontSizeMax'              => 48,               // Set to null to allow any font-size
 			'ColorAllowAdvFormats'     => false,            // Whether the rgb[a], hsl[a] color formats should be accepted
 			'QuoteTitleBackground'     => '#e4eaf2',
