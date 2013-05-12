@@ -17,7 +17,7 @@
 				this.isValidArgument = function(settings, argument) { return false; }
 				this.isValidParent = function(settings, parent) { return true; }
 				this.escape = function(settings, content) { return PHPC.htmlspecialchars(content); }
-				this.open = function(settings, argument, closingCode) { console.log("open"); return '<img src="http://www.scenemusic.eu/static/emoticons/pony.gif">'; }
+				this.open = function(settings, argument, closingCode) { console.log("open"); return '<img src="http://www.scenemusic.net/static/emoticons/pony.gif">'; }
 				this.close = function(settings, argument, closingCode) { return ''; }
 			}
 			HTMLSmilieBBCode.prototype = new BBCode;
@@ -26,9 +26,14 @@
 				try {
 					var test = document.getElementById("test");
 					var parser = new BBCodeParser();
-					var parser2 = new BBCodeParser(null, null, {
-						"smile": new HTMLSmilieBBCode()
-					}, false, null, null, false, ":", ":");
+					var parser2 = new BBCodeParser({
+						codes: {
+							"smile": new HTMLSmilieBBCode()
+						},
+						codeStartSymbol: ":",
+						codeEndSymbol: ":",
+						escapeContentOutput: false
+					});
 					test.innerHTML = parser2.format(parser.format(test.innerHTML));
 				} catch(e) {
 					console.log(e);
