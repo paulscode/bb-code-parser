@@ -19,7 +19,7 @@
 				request.open("get", file, false);
 				request.send(null);
 
-				if (request.readyState === 4 && request.status === 200) {
+				if (request.readyState === 4 && (request.status === 200 || request.status === 0)) {
 					try {
 						// Won't exist in IE < 8. Still using IE7? Upgrade dude!
 						request = JSON.parse(request.responseText);
