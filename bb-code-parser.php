@@ -256,7 +256,7 @@
 			$this->setupDefaultCodes();
 
 			if($options) {
-				$this->allOrNothing = BBCodeParser::isValidKey($options, 'allorNothing')? !!$options['allOrNothing'] : $this->allOrNothing;
+				$this->allOrNothing = BBCodeParser::isValidKey($options, 'allOrNothing')? !!$options['allOrNothing'] : $this->allOrNothing;
 				$this->handleOverlappingCodes = BBCodeParser::isValidKey($options, 'handleOverlappingCodes')? !!$options['handleOverlappingCodes'] : $this->handleOverlappingCodes;
 				$this->escapeContentOutput = BBCodeParser::isValidKey($options, 'escapeContentOutput')? !!$options['escapeContentOutput'] : $this->escapeContentOutput;
 				$this->codeStartSymbol = BBCodeParser::isValidKey($options, 'codeStartSymbol')? $options['codeStartSymbol'] : $this->codeStartSymbol;
@@ -307,7 +307,7 @@
 		// $allOrNothing, $handleOverlapping, and $escapeContentOutput codes can be overridden per call
 		public function format($input, $options=null) {
 
-			$allOrNothing = ($options && BBCodeParser::isValidKey($options, 'allorNothing'))? !!$options['allOrNothing'] : $this->allOrNothing;
+			$allOrNothing = ($options && BBCodeParser::isValidKey($options, 'allOrNothing'))? !!$options['allOrNothing'] : $this->allOrNothing;
 			$handleOverlappingCodes = ($options && BBCodeParser::isValidKey($options, 'handleOverlappingCodes'))? !!$options['handleOverlappingCodes'] : $this->handleOverlappingCodes;
 			$escapeContentOutput = ($options && BBCodeParser::isValidKey($options, 'escapeContentOutput'))? !!$options['escapeContentOutput'] : $this->escapeContentOutput;
 

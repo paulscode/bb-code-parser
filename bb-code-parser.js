@@ -304,7 +304,7 @@
 		setupDefaultCodes();
 
 		if(options) {
-			_allOrNothing = ('allorNothing' in options)? options.allOrNothing : _allOrNothing;
+			_allOrNothing = ('allOrNothing' in options)? options.allOrNothing : _allOrNothing;
 			_handleOverlappingCodes = ('handleOverlappingCodes' in options)? options.handleOverlappingCodes : _handleOverlappingCodes;
 			_escapeContentOutput = ('escapeContentOutput' in options)? options.escapeContentOutput : _escapeContentOutput;
 			_codeStartSymbol = options.codeStartSymbol || _codeStartSymbol;
