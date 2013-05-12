@@ -355,6 +355,11 @@
 						if(substr($code, 0, 1) === '/') {
 							$codeNoSlash = substr($codeDisplayName, 1);
 
+							// Empty non-codes like [/] will cause the previous to return false, not "".
+							if (!$codeNoSlash) {
+								$codeNoSlash = "";
+							}
+
 							// Handle auto closing codes
 							if(BBCodeParser::isValidKey($codes, $codeNoSlash) && ($autoCloseCode = $codes[$codeNoSlash]->getAutoCloseCodeOnClose()) &&
 							   BBCodeParser::isValidKey($codes, $autoCloseCode) && in_array($autoCloseCode, $stack)) {

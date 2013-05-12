@@ -65,5 +65,21 @@
 		"name" : "code in middle",
 		"input" : "start [b]text[/b] end",
 		"result" : "start <b>text</b> end"
+	}, {
+		"name" : "empty brackets test #1",
+		"input" : "[] [/] []",
+		"result" : "[] [/] []"
+	}, {
+		"name" : "empty brackets test #2",
+		"input" : "[] [] [/] []",
+		"result" : "[] [] [/] []"
+	}, {
+		"name" : "empty brackets test #3",
+		"input" : "[][/][][]",
+		"result" : "[][/][][]"
+	}, {
+		"name" : "nested empty brackets",
+		"input" : "[][[/]][[]][]",
+		"result" : "[][[/]][[]][]"
 	} ]
 }
