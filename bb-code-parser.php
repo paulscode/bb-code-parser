@@ -177,23 +177,23 @@
 		private $settings = array(
 			'XHTML'                    => false,
 			'FontSizeUnit'             => 'pt',
-			'FontSizeMax'              => 48, /* Set to null to allow any font-size */
-			'ColorAllowAdvFormats'     => false, /* Whether the rgb[a], hsl[a] color formats should be accepted */
+			'FontSizeMax'              => 48,               // Set to null to allow any font-size
+			'ColorAllowAdvFormats'     => false,            // Whether the rgb[a], hsl[a] color formats should be accepted
 			'QuoteTitleBackground'     => '#e4eaf2',
 			'QuoteBorder'              => '1px solid gray',
 			'QuoteBackground'          => 'white',
-			'QuoteCSSClassName'        => 'quotebox-${by}', /* ${by} is the quote parameter ex: [quote=Waldo], ${by} = Waldo */
+			'QuoteCSSClassName'        => 'quotebox-${by}', // ${by} is the quote parameter ex: [quote=Waldo], ${by} = Waldo
 			'CodeTitleBackground'      => '#ffc29c',
 			'CodeBorder'               => '1px solid gray',
 			'CodeBackground'           => 'white',
-			'CodeCSSClassName'         => 'codebox-${lang}', /* ${lang} is the code parameter ex: [code=PHP], ${lang} = php */
+			'CodeCSSClassName'         => 'codebox-${lang}', // ${lang} is the code parameter ex: [code=PHP], ${lang} = php
 			'LinkUnderline'            => true,
 			'LinkColor'                => 'blue'//,
-			/*'ImageWidthMax'            => 640,*/ // Uncomment these to tell the BB-Code parser to use them
-			/*'ImageHeightMax'           => 480,*/ // The default is to allow any size image
-			/*'UnorderedListDefaultType' => 'circle',*/ // Uncomment these to tell the BB-Code parser to use this
-			/*'OrderedListDefaultType'   => '1',     */ // default type if the given one is invalid **
-			/*'ListDefaultType'          => 'circle' */ // ...
+			//'ImageWidthMax'            => 640,               // Uncomment these to tell the BB-Code parser to use them
+			//'ImageHeightMax'           => 480,               // The default is to allow any size image
+			//'UnorderedListDefaultType' => 'disk',            // Uncomment these to tell the BB-Code parser to use this
+			//'OrderedListDefaultType'   => '1',               // default type if the given one is invalid **
+			//'ListDefaultType'          => 'disk'             // ...
 		);
 		// ** Note that this affects whether a tag is printed out "as is" if a bad argument is given.
 		// It may not affect those tags which can take "" or nothing as their argument
@@ -1118,10 +1118,10 @@
 				$key = null;
 
 				if(BBCodeParser::isValidKey(self::$types, $argument)) $key = self::$types[$argument];
-				if(!$key && BBCodeParser::isValidKey(self::$types, 'UnorderedListDefaultType') && BBCodeParser::isValidKey(self::$types, 'UnorderedListDefaultType')) {
-					$argument = self::$types[$settings['UnorderedListDefaultType']];
+				if(!$key && BBCodeParser::isValidKey($settings, 'UnorderedListDefaultType') && BBCodeParser::isValidKey(self::$types, $settings['UnorderedListDefaultType'])) {
+					$key = self::$types[$settings['UnorderedListDefaultType']];
 				}
-				if(!$key) $argument = self::$types['circle'];
+				if(!$key) $key = self::$types['disk'];
 
 				return '<ul style="list-style-type: '.htmlspecialchars($key).'">';
 			}
@@ -1159,10 +1159,10 @@
 				$key = null;
 
 				if(BBCodeParser::isValidKey(self::$types, $argument)) $key = self::$types[$argument];
-				if(!$key && BBCodeParser::isValidKey(self::$types, 'OrderedListDefaultType') && BBCodeParser::isValidKey(self::$types, 'OrderedListDefaultType')) {
-					$argument = self::$types[$settings['OrderedListDefaultType']];
+				if(!$key && BBCodeParser::isValidKey($settings, 'OrderedListDefaultType') && BBCodeParser::isValidKey(self::$types, $settings['OrderedListDefaultType'])) {
+					$key = self::$types[$settings['OrderedListDefaultType']];
 				}
-				if(!$key) $argument = self::$types['1'];
+				if(!$key) $key = self::$types['1'];
 
 				return '<ol style="list-style-type: '.htmlspecialchars($key).'">';
 			}
@@ -1242,13 +1242,13 @@
 			if(!$key && BBCodeParser::isValidKey(self::$ol_types, $argument)) {
 				$key = self::$ol_types[$argument];
 			}
-			if(!$key && BBCodeParser::isValidKey(self::$ul_types, 'ListDefaultType')) {
+			if(!$key && BBCodeParser::isValidKey($settings, 'ListDefaultType')) {
 				$key = self::$ul_types[$settings['ListDefaultType']];
 			}
 			if(!$key && BBCodeParser::isValidKey($settings, 'ListDefaultType')) {
 				$key = self::$ol_types[$settings['ListDefaultType']];
 			}
-			if(!$key) $key = self::$ul_types['circle'];
+			if(!$key) $key = self::$ul_types['disk'];
 
 			return $key;
 		}

@@ -282,11 +282,11 @@ class BBCodeParser:
                     'CodeCSSClassName': 'codebox-{lang}', # {lang} is the code parameter ex: [code=PHP], {lang} = php
                        'LinkUnderline': True,
                            'LinkColor': 'blue'#,
-         """           'ImageWidthMax': 640,"""           # Uncomment these to tell the BB-Code parser to use them
-         """          'ImageHeightMax': 480,"""           # The default is to allow any size image
-         """'UnorderedListDefaultType': 'circle',"""      # Uncomment these to tell the BB-Code parser to use this
-         """  'OrderedListDefaultType': '1',     """      # default type if the given one is invalid **
-         """         'ListDefaultType': 'circle' """      # ...
+        #               'ImageWidthMax': 640,              # Uncomment these to tell the BB-Code parser to use them
+        #              'ImageHeightMax': 480,              # The default is to allow any size image
+        #    'UnorderedListDefaultType': 'disk',           # Uncomment these to tell the BB-Code parser to use this
+        #      'OrderedListDefaultType': '1',              # default type if the given one is invalid **
+        #             'ListDefaultType': 'disk'            # ...
         }
 
         # ** Note that this affects whether a tag is printed out "as is" if a bad argument is given.
@@ -1583,11 +1583,11 @@ class HTMLUnorderedListBBCode(BBCode):
             if BBCodeParser.is_valid_key(self.types, argument):
                 key = self.types[argument]
 
-            if not key and BBCodeParser.is_valid_key(self.types, 'UnorderedListDefaultType') and BBCodeParser.is_valid_key(self.types, 'UnorderedListDefaultType'):
-                argument = self.types[settings['UnorderedListDefaultType']]
+            if not key and BBCodeParser.is_valid_key(settings, 'UnorderedListDefaultType') and BBCodeParser.is_valid_key(self.types, settings['UnorderedListDefaultType']):
+                key = self.types[settings['UnorderedListDefaultType']]
 
             if not key:
-                argument = self.types['circle']
+                key = self.types['disk']
 
             return '<ul style="list-style-type: ' + cgi.escape(key, True) + '">'
 
@@ -1653,11 +1653,11 @@ class HTMLOrderedListBBCode(BBCode):
             if BBCodeParser.is_valid_key(self.types, argument):
                 key = self.types[argument]
 
-            if not key and BBCodeParser.is_valid_key(self.types, 'OrderedListDefaultType') and BBCodeParser.is_valid_key(self.types, 'OrderedListDefaultType'):
-                argument = self.types[settings['OrderedListDefaultType']]
+            if not key and BBCodeParser.is_valid_key(settings, 'OrderedListDefaultType') and BBCodeParser.is_valid_key(self.types, settings['OrderedListDefaultType']):
+                key = self.types[settings['OrderedListDefaultType']]
 
             if not key:
-                argument = self.types['1']
+                key = self.types['1']
 
             return '<ol style="list-style-type: ' + cgi.escape(key, True) + '">'
 
@@ -1793,14 +1793,14 @@ class HTMLListBBCode(BBCode):
         if not key and BBCodeParser.is_valid_key(self.ol_types, argument):
             key = self.ol_types[argument]
 
-        if not key and BBCodeParser.is_valid_key(self.ul_types, 'ListDefaultType'):
+        if not key and BBCodeParser.is_valid_key(settings, 'ListDefaultType'):
             key = self.ul_types[settings['ListDefaultType']]
 
         if not key and BBCodeParser.is_valid_key(settings, 'ListDefaultType'):
             key = self.ol_types[settings['ListDefaultType']]
 
         if not key:
-            key = self.ul_types['circle']
+            key = self.ul_types['disk']
 
         return key
 
