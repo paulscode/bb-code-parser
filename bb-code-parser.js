@@ -1187,10 +1187,10 @@
 				var key = null;
 
 				if(BBCodeParser.isValidKey(types, argument)) key = types[argument];
-				if(!key && BBCodeParser.isValidKey(types, 'UnorderedListDefaultType') && BBCodeParser.isValidKey(types, 'UnorderedListDefaultType')) {
-					argument = types[settings['UnorderedListDefaultType']];
+				if(!key && BBCodeParser.isValidKey(settings, 'UnorderedListDefaultType') && BBCodeParser.isValidKey(types, settings['UnorderedListDefaultType']) {
+					key = types[settings['UnorderedListDefaultType']];
 				}
-				if(!key) argument = types['circle'];
+				if(!key) key = types['disk'];
 
 				return '<ul style="list-style-type: ' + PHPC.htmlspecialchars(key) + '">';
 			}
@@ -1232,10 +1232,10 @@
 				var key = null;
 
 				if(BBCodeParser.isValidKey(types, argument)) key = types[argument];
-				if(!key && BBCodeParser.isValidKey(types, 'OrderedListDefaultType') && BBCodeParser.isValidKey(types, 'OrderedListDefaultType')) {
-					argument = types[settings['OrderedListDefaultType']];
+				if(!key && BBCodeParser.isValidKey(settings, 'OrderedListDefaultType') && BBCodeParser.isValidKey(types, settings['OrderedListDefaultType'])) {
+					key = types[settings['OrderedListDefaultType']];
 				}
-				if(!key) argument = types['1'];
+				if(!key) key = types['1'];
 
 				return '<ol style="list-style-type: ' + PHPC.htmlspecialchars(key) + '">';
 			}
@@ -1321,13 +1321,13 @@
 			if(!key && BBCodeParser.isValidKey(ol_types, argument)) {
 				key = ol_types[argument];
 			}
-			if(!key && BBCodeParser.isValidKey(ul_types, 'ListDefaultType')) {
+			if(!key && BBCodeParser.isValidKey(settings, 'ListDefaultType')) {
 				key = ul_types[settings['ListDefaultType']];
 			}
 			if(!key && BBCodeParser.isValidKey(settings, 'ListDefaultType')) {
 				key = ol_types[settings['ListDefaultType']];
 			}
-			if(!key) key = ul_types['circle'];
+			if(!key) key = ul_types['disk'];
 
 			return key;
 		}
