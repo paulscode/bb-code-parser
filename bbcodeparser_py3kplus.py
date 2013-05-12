@@ -1280,7 +1280,12 @@ class HTMLQuoteBBCode(BBCode):
     def open(self, settings, argument=None, closing_code=None):
 
         if closing_code is None:
-            box = '<div style="display: block margin-bottom: .5em border: ' + cgi.escape(settings['QuoteBorder'], True) + ' background-color: ' + cgi.escape(settings['QuoteBackground'], True) + '">'
+            box = '<div '
+
+            if argument:
+                box += 'class="' + cgi.escape(settings['QuoteCSSClassName'].replace('{by}', argument), True) + '" '
+
+            box += style="display: block margin-bottom: .5em border: ' + cgi.escape(settings['QuoteBorder'], True) + ' background-color: ' + cgi.escape(settings['QuoteBackground'], True) + '">'
             box += '<div style="display: block width: 100% text-indent: .25em border-bottom: ' + cgi.escape(settings['QuoteBorder'], True) + ' background-color: ' + cgi.escape(settings['QuoteTitleBackground'], True) + '">'
             box += 'QUOTE'
 
@@ -1288,12 +1293,7 @@ class HTMLQuoteBBCode(BBCode):
                 box += ' by ' + cgi.escape(argument, True)
 
             box += '</div>'
-            box += '<div '
-
-            if argument:
-                box += 'class="' + cgi.escape(settings['QuoteCSSClassName'].replace('{by}', argument), True) + '" '
-
-            box += 'style="overflow-x: auto padding: .25em">'
+            box += '<div style="overflow-x: auto padding: .25em">'
             return box
 
     def close(self, settings, argument=None, closing_code=None):

@@ -1005,14 +1005,14 @@
 		this.open = function(settings, argument, closingCode) {
 			if(closingCode === undefined) closingCode = null;
 			if(closingCode === null) {
-				var box  = '<div style="display: block; margin-bottom: .5em; border: ' + PHPC.htmlspecialchars(settings['QuoteBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['QuoteBackground']) + '">';
+				var box  = '<div ';
+				if(argument) box += 'class="' + PHPC.htmlspecialchars(settings['QuoteCSSClassName'].replace('{by}', argument)) + '"';
+				box += 'style="display: block; margin-bottom: .5em; border: ' + PHPC.htmlspecialchars(settings['QuoteBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['QuoteBackground']) + '">';
 				box += '<div style="display: block; width: 100%; text-indent: .25em; border-bottom: ' + PHPC.htmlspecialchars(settings['QuoteBorder']) + '; background-color: ' + PHPC.htmlspecialchars(settings['QuoteTitleBackground']) + '">';
 				box += 'QUOTE';
 				if(argument) box += ' by ' + PHPC.htmlspecialchars(argument);
 				box += '</div>';
-				box += '<div ';
-				if(argument) box += 'class="' + PHPC.htmlspecialchars(settings['QuoteCSSClassName'].replace('{by}', argument));
-				box += 'style="overflow-x: auto; padding: .25em">';
+				box += '<div style="overflow-x: auto; padding: .25em">';
 				return box;
 			}
 		}

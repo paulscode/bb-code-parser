@@ -956,14 +956,14 @@
 		public function escape($settings, $content) { return htmlspecialchars($content); }
 		public function open($settings, $argument=null, $closingCode=null) {
 			if($closingCode === null) {
-				$box  = '<div style="display: block; margin-bottom: .5em; border: '.htmlspecialchars($settings['QuoteBorder']).'; background-color: '.htmlspecialchars($settings['QuoteBackground']).'">';
+				$box  = '<div ';
+				if($argument) $box .= 'class="'.htmlspecialchars(str_replace('${by}', $argument, $settings['QuoteCSSClassName'])).'" ';
+				$box .= 'style="display: block; margin-bottom: .5em; border: '.htmlspecialchars($settings['QuoteBorder']).'; background-color: '.htmlspecialchars($settings['QuoteBackground']).'">';
 				$box .= '<div style="display: block; width: 100%; text-indent: .25em; border-bottom: '.htmlspecialchars($settings['QuoteBorder']).'; background-color: '.htmlspecialchars($settings['QuoteTitleBackground']).'">';
 				$box .= 'QUOTE';
 				if($argument) $box .= ' by '.htmlspecialchars($argument);
 				$box .= '</div>';
-				$box .= '<div ';
-				if($argument) $box .= 'class="'.htmlspecialchars(str_replace('${by}', $argument, $settings['QuoteCSSClassName'])).'" ';
-				$box .= 'style="overflow-x: auto; padding: .25em">';
+				$box .= '<div style="overflow-x: auto; padding: .25em">';
 				return $box;
 			}
 		}
