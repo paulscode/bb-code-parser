@@ -1187,7 +1187,7 @@
 				var key = null;
 
 				if(BBCodeParser.isValidKey(types, argument)) key = types[argument];
-				if(!key && BBCodeParser.isValidKey(settings, 'UnorderedListDefaultType') && BBCodeParser.isValidKey(types, settings['UnorderedListDefaultType']) {
+				if(!key && BBCodeParser.isValidKey(settings, 'UnorderedListDefaultType') && BBCodeParser.isValidKey(types, settings['UnorderedListDefaultType'])) {
 					key = types[settings['UnorderedListDefaultType']];
 				}
 				if(!key) key = types['disk'];
