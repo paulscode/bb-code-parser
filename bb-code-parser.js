@@ -531,11 +531,10 @@
 
 								token.status = BBCodeParser_Token.INVALID;
 								// Both tokens in the pair should be marked
-								if(token.status) {
+								if(token.matches) {
 									queue[token.matches].status = BBCodeParser_Token.INVALID;
 								}
 
-								// AllOrNothing, return input
 								if(allOrNothing) return input;
 							}
 
@@ -543,7 +542,17 @@
 						}
 
 						// Check the parent code too ... some codes are only used within other codes
-						if(token.status === BBCodeParser_Token.VALID && codes[token.content].isValidParent(settings, parent)) {
+						if(!codes[token.content].isValidParent(settings, parent)) {
+
+							if(token.matches) {
+								queue[token.matches].status = BBCodeParser_Token.INVALID;
+							}
+							token.status = BBCodeParser_Token.INVALID;
+
+							if(allOrNothing) return input;
+						}
+
+						if(token.status === BBCodeParser_Token.VALID) {
 							output += codes[token.content].open(settings, token.argument);
 
 							// Store all open codes
@@ -1103,7 +1112,7 @@
 		this.getAutoCloseCodeOnOpen = function() { return null; }
 		this.getAutoCloseCodeOnClose = function() { return null; }
 		this.isValidArgument = function(settings, argument) { return true; }
-		this.isValidParent = function(settings, parent) { return true; }
+		this.isValidParent = function(settings, parent) { return parent !== this.getDisplayName(); }
 		this.escape = function(settings, content) { return PHPC.htmlspecialchars(content); }
 		this.open = function(settings, argument, closingCode) {
 			var decoration = (!BBCodeParser.isValidKey(settings, 'LinkUnderline') || settings['LinkUnderline'])? 'underline' : 'none';

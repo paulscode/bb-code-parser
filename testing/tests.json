@@ -15,6 +15,12 @@
 				"FontSizeUnit" : "em"
 			}
 		}
+	}, {
+		"name" : "configuration with allOrNothing turned off",
+		"key" : "notallornothing",
+		"constructorArgument" : {
+			"allOrNothing" : false
+		}
 	} ],
 	"unitTests" : [ {
 		"name" : "simple built-in codes",
@@ -89,5 +95,15 @@
 		"name" : "closest bracket match only",
 		"input" : "some [b]sample[/b] test] [text again",
 		"result" : "some <b>sample</b> test] [text again"
+	}, {
+		"name" : "nested link codes",
+		"run" : [ "notallornothing" ],
+		"input" : "[url=http://google.com]testing [url=http://asmcbain.net]nested[/url] codes[/url]",
+		"result" : "<a style=\"text-decoration: underline; color: blue\" href=\"http://google.com\">testing [url=http://asmcbain.net]nested[/url] codes</a>"
+	}, {
+		"name" : "nested link codes",
+		"stop" : [ "notallornothing" ],
+		"input" : "[url=http://google.com]testing [url=http://asmcbain.net]nested[/url] codes[/url]",
+		"result" : "[url=http://google.com]testing [url=http://asmcbain.net]nested[/url] codes[/url]"
 	} ]
 }

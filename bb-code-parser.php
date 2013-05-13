@@ -482,11 +482,10 @@
 
 								$token->status = BBCodeParser_Token::$INVALID;
 								// Both tokens in the pair should be marked
-								if($token->status) {
+								if($token->matches) {
 									$queue[$token->matches]->status = BBCodeParser_Token::$INVALID;
 								}
 
-								// AllOrNothing, return input
 								if($allOrNothing) return $input;
 							}
 
@@ -494,7 +493,17 @@
 						}
 
 						// Check the parent code too ... some codes are only used within other codes
-						if($token->status === BBCodeParser_Token::$VALID && $codes[$token->content]->isValidParent($settings, $parent)) {
+						if(!$codes[$token->content]->isValidParent($settings, $parent)) {
+
+							if($token->matches) {
+								$queue[$token->matches]->status = BBCodeParser_Token::$INVALID;
+							}
+							$token->status = BBCodeParser_Token::$INVALID;
+
+							if($allOrNothing) return $input;
+						}
+
+						if($token->status === BBCodeParser_Token::$VALID) {
 							$output .= $codes[$token->content]->open($settings, $token->argument);
 
 							// Store all open codes
@@ -1051,7 +1060,7 @@
 		public function getAutoCloseCodeOnOpen() { return null; }
 		public function getAutoCloseCodeOnClose() { return null; }
 		public function isValidArgument($settings, $argument=null) { return true; }
-		public function isValidParent($settings, $parent=null) { return true; }
+		public function isValidParent($settings, $parent=null) { return $parent !== $this->getDisplayName(); }
 		public function escape($settings, $content) { return htmlspecialchars($content); }
 		public function open($settings, $argument=null, $closingCode=null) {
 			$decoration = (!BBCodeParser::isValidKey($settings, 'LinkUnderline') || $settings['LinkUnderline'])? 'underline' : 'none';

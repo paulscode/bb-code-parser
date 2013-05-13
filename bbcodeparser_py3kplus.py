@@ -535,7 +535,16 @@ class BBCodeParser:
                         parent = 'GLOBAL' if parent == -1 else queue[parent].content
 
                     # Check the parent code too ... some codes are only used within other codes
-                    if token.status == Token.VALID and codes[token.content].is_valid_parent(settings, parent):
+                    if not codes[token.content].is_valid_parent(settings, parent):
+
+                        if token.matches:
+                            queue[token.matches].status = Token.INVALID
+                        token.status = Token.INVALID
+
+                        if allOrNothing:
+                            return finput
+
+                    if token.status == Token.VALID:
                         output += codes[token.content].open(settings, token.argument)
 
                         # Store all open codes
