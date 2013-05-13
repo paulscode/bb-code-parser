@@ -81,5 +81,9 @@
 		"name" : "nested empty brackets",
 		"input" : "[][[/]][[]][]",
 		"result" : "[][[/]][[]][]"
+	}, {
+		"name" : "closest bracket match only",
+		"input" : "some [b]sample[/b] test] text",
+		"result" : "some <b>sample</b> test] text"
 	} ]
 }
