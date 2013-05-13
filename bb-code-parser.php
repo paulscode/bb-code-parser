@@ -493,7 +493,7 @@
 						}
 
 						// Check the parent code too ... some codes are only used within other codes
-						if(!$codes[$token->content]->isValidParent($settings, $parent)) {
+						if($token->status === BBCodeParser_Token::$VALID && !$codes[$token->content]->isValidParent($settings, $parent)) {
 
 							if($token->matches) {
 								$queue[$token->matches]->status = BBCodeParser_Token::$INVALID;

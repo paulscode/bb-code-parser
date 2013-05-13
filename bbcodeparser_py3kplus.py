@@ -535,7 +535,7 @@ class BBCodeParser:
                         parent = 'GLOBAL' if parent == -1 else queue[parent].content
 
                     # Check the parent code too ... some codes are only used within other codes
-                    if not codes[token.content].is_valid_parent(settings, parent):
+                    if token.status == Token.VALID and not codes[token.content].is_valid_parent(settings, parent):
 
                         if token.matches:
                             queue[token.matches].status = Token.INVALID
