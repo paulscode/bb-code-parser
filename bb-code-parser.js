@@ -444,8 +444,8 @@
 					}
 				}
 
-				// Get any text after the last end symbold
-				var lastBits = input.substr(input.lastIndexOf(codeEndSymbol) + codeEndSymbol.length);
+				// Get any text after the last end symbol
+				var lastBits = tokenizer.positionToEndToken();
 				if(lastBits !== '') {
 					queue.push(new BBCodeParser_Token(BBCodeParser_Token.CONTENT, lastBits));
 				}
@@ -672,6 +672,10 @@
 		input = input + '';
 		length = input.length;
 		position = PHPC.intval(position);
+
+		this.positionToEndToken = function() {
+			return input.substring(position);
+		};
 
 		this.hasNextToken = function(delimiter) {
 			if(delimiter === undefined) delimiter = ' ';

@@ -442,7 +442,7 @@ class BBCodeParser:
                     queue.append(Token(Token.CONTENT, before + '[]'))
 
             # Get any text after the last end symbol
-            last_bits = finput[finput.rfind(code_end_symbol) + len(code_end_symbol):]
+            last_bits = tokenizer.position_to_end_token();
             if last_bits != '':
                 queue.append(Token(Token.CONTENT, last_bits))
 
@@ -646,6 +646,9 @@ class MultiTokenizer(object):
         self.input = tinput + ''
         self.length = len(self.input)
         self.position = int(position)
+
+    def position_to_end_token():
+        return self.input[self.position:]
 
     def has_next_token(self, delimiter=' '):
         """

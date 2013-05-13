@@ -397,7 +397,7 @@
 				}
 
 				// Get any text after the last end symbol
-				$lastBits = substr($input, strrpos($input, $codeEndSymbol) + strlen($codeEndSymbol));
+				$lastBits = $tokenizer->positionToEndToken();
 				if($lastBits !== '') {
 					$queue[] = new BBCodeParser_Token(BBCodeParser_Token::$CONTENT, $lastBits);
 				}
@@ -648,6 +648,10 @@
 			$this->input = $input.'';
 			$this->length = strlen($this->input);
 			$this->position = intval($position);
+		}
+
+		public function positionToEndToken() {
+			return substr($this->input, $this->position);
 		}
 
 		public function hasNextToken($delimiter=' ') {

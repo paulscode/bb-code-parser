@@ -85,5 +85,9 @@
 		"name" : "closest bracket match only",
 		"input" : "some [b]sample[/b] test] text",
 		"result" : "some <b>sample</b> test] text"
+	}, {
+		"name" : "closest bracket match only",
+		"input" : "some [b]sample[/b] test] [text again",
+		"result" : "some <b>sample</b> test] [text again"
 	} ]
 }
