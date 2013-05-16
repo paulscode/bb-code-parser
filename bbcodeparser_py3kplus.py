@@ -74,8 +74,8 @@
             'LinkColor' : 'green',
             'CustomSetting1' : 3
         }
-    });
-    output = parser.format(finput);
+    })
+    output = parser.format(finput)
     
     # The above are just simple examples. Multiple properties can be set and combined
     # together when instantiating a parser.
@@ -395,6 +395,11 @@ class BBCodeParser:
                     if before != '':
                         queue.append(Token(Token.CONTENT, before))
 
+                    # Check if the tokenizer ran out of input trying to find the end of a code caused by a stray codeEndSymbol.
+                    if tokenizer.is_exhausted() and input[len(input) - len(codeEndSymbol):] != codeEndSymbol:
+                        queue.append(new Token(Token.CONTENT, codeStartSymbol + code))
+                        continue
+
                     # Parse differently depending on whether or not there's an argument
                     equals = code.rfind('=')
                     if equals != -1:
@@ -442,7 +447,7 @@ class BBCodeParser:
                     queue.append(Token(Token.CONTENT, before + '[]'))
 
             # Get any text after the last end symbol
-            last_bits = tokenizer.position_to_end_token();
+            last_bits = tokenizer.position_to_end_token()
             if last_bits != '':
                 queue.append(Token(Token.CONTENT, last_bits))
 
@@ -655,6 +660,9 @@ class MultiTokenizer(object):
         self.input = tinput + ''
         self.length = len(self.input)
         self.position = int(position)
+
+    def is_exhausted():
+        return self.position >= self.length
 
     def position_to_end_token():
         return self.input[self.position:]

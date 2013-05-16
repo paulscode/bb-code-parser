@@ -303,7 +303,9 @@
 
         setupDefaultCodes();
 
+        var key;
         if(options) {
+
             _allOrNothing = ('allOrNothing' in options)? options.allOrNothing : _allOrNothing;
             _handleOverlappingCodes = ('handleOverlappingCodes' in options)? options.handleOverlappingCodes : _handleOverlappingCodes;
             _escapeContentOutput = ('escapeContentOutput' in options)? options.escapeContentOutput : _escapeContentOutput;
@@ -311,7 +313,6 @@
             _codeEndSymbol = options.codeEndSymbol || _codeEndSymbol;
 
             // Copy settings
-            var key;
             if(options.settings) {
                 for(key in options.settings) {
                     _settings[key] = options.settings[key];
@@ -390,6 +391,13 @@
                         // Store content before code
                         if(before !== '') {
                             queue.push(new BBCodeParser_Token(BBCodeParser_Token.CONTENT, before));
+                        }
+
+                        // Check if the tokenizer ran out of input trying to find the end of a code caused by a stray codeEndSymbol.
+                        if(tokenizer.isExhausted() && input.substring(input.length - codeEndSymbol.length) !== codeEndSymbol) {
+
+                            queue.push(new BBCodeParser_Token(BBCodeParser_Token.CONTENT, codeStartSymbol + code));
+                            continue;
                         }
 
                         // Parse differently depending on whether or not there's an argument
@@ -681,6 +689,10 @@
         input = input + '';
         length = input.length;
         position = PHPC.intval(position);
+
+        this.isExhausted = function() {
+            return position >= length;
+        };
 
         this.positionToEndToken = function() {
             return input.substring(position);
