@@ -341,6 +341,13 @@
                             $queue[] = new BBCodeParser_Token(BBCodeParser_Token::$CONTENT, $before);
                         }
 
+                        // Check if the tokenizer ran out of input trying to find the end of a code caused by a stray codeEndSymbol.
+                        if($tokenizer->isExhausted() && substr($input, strlen($input) - strlen($codeEndSymbol)) !== $codeEndSymbol) {
+
+                            $queue[] = new BBCodeParser_Token(BBCodeParser_Token::$CONTENT, $codeStartSymbol.code));
+                            continue;
+                        }
+
                         // Parse differently depending on whether or not there's an argument
                         $equals = strrpos($code, '=');
                         if($equals) {
@@ -657,6 +664,10 @@
             $this->input = $input.'';
             $this->length = strlen($this->input);
             $this->position = intval($position);
+        }
+
+        public function isExhausted = function() {
+            return $this->position >= $this->length;
         }
 
         public function positionToEndToken() {
