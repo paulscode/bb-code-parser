@@ -105,5 +105,13 @@
 		"stop" : [ "notallornothing" ],
 		"input" : "[url=http://google.com]testing [url=http://asmcbain.net]nested[/url] codes[/url]",
 		"result" : "[url=http://google.com]testing [url=http://asmcbain.net]nested[/url] codes[/url]"
+	}, {
+		"name" : "stray opening bracket inside of a code",
+		"input" : "text [b]this is [bold text[/b] for testing",
+		"result" : "text <b>this is [bold text</b> for testing"
+	}, {
+		"name" : "stray opening bracket before a code",
+		"input" : "text [ text [b]this is bold text[/b] for testing",
+		"result" : "text [ text <b>this is bold text</b> for testing"
 	} ]
 }
