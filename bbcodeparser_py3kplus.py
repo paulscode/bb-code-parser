@@ -696,7 +696,7 @@ class MultiTokenizer(object):
             index = self.length
 
         result = self.input[self.position:index]
-        self.position = index + 1
+        self.position = index + len(delimiter);
 
         return result
 

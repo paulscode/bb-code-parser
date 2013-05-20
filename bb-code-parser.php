@@ -698,7 +698,7 @@
             }
 
             $result = substr($this->input, $this->position, $index - $this->position);
-            $this->position = $index + 1;
+            $this->position = $index + strlen($delimiter);
 
             return ($result !== false)? $result : '';
         }

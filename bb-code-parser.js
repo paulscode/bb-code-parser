@@ -724,7 +724,7 @@
             }
 
             var result = input.substring(position, index);
-            position = index + 1;
+            position = index + delimiter.length;
 
             return result;
         };
