@@ -26,7 +26,8 @@ site that does not allow editing of those posts, it is now recommended to turn t
 "all or nothing" mode off. The parser after version 1.0.1 is better at handling
 ambiguous user input so the intended output results. Even if not, such as for user
 mistakes like "[b]text[/u]", it may be preferable to users to try to render as much
-correctly as possible rather than nothing at all.
+correctly as possible rather than nothing at all. A future version of this parser
+might default "all or nothing" to off.
 
 
 In order to keep this README short, I haven't include any usage details. Please see
