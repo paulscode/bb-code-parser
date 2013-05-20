@@ -397,7 +397,7 @@ class BBCodeParser:
 
                         // Check if a stray codeStartSymbol caused it to match a larger (and invalid) code than it intended. If so,
                         // the first part of the matched 'code' should be marked as content, the rest is what was really wanted.
-                    if(code.indexOf(codeStartSymbol) !== -1) {
+                    if code.find(codeStartSymbol) != -1:
                          code = code.split(codeStartSymbol);
                          queue.append(Token(Token.CONTENT, codeStartSymbol + code[0]));
                          code = code[1];

@@ -344,6 +344,7 @@
                         // Check if a stray codeStartSymbol caused it to match a larger (and invalid) code than it intended. If so,
                         // the first part of the matched 'code' should be marked as content, the rest is what was really wanted.
                         if(strrpos($code, $codeStartSymbol) !== false) {
+
                             $code = explode($codeStartSymbol, $code);
                             $queue[] = new BBCodeParser_Token(BBCodeParser_Token::$CONTENT, $codeStartSymbol.$code[0]);
                             $code = $code[1];
