@@ -19,19 +19,29 @@ b, i, u, s, font, size, color, left, center, right, quote, code, codebox, url, i
 ul, ol, li, list, * (equivalent to li)
 
 
+The parser also defaults to a mode called "all or nothing" which returns the input
+if it finds invalid or unmatched codes. (Codes which hae a valid implemenatation but
+are not allowed are not considered invalid.) If this parser is used for posts on a
+site that does not allow editing of those posts, it is now recommended to turn the
+"all or nothing" mode off. The parser after version 1.0.1 is better at handling
+ambiguous user input so the intended output results. Even if not, such as for user
+mistakes like "[b]text[/u]", it may be preferable to users to try to render as much
+correctly as possible rather than nothing at all.
+
+
 In order to keep this README short, I haven't include any usage details. Please see
 the top of either the PHP or JS bb-code parser file for how to use this library.
 
-Please note in version 1.0 the way options are passed to the constructor and format
-method has changed. The last version with the old API is available as tag v.9 under
-the downloads section.
+Please note starting in 1.0 the way options are passed to the constructor and
+format method has changed. The last version with the old API is available as tag
+v.9 under the downloads section.
 
-(Use the 1.0.1 tag. The 1.0 tag is rather broke for the PHP version.)
+(Please do not use the 1.0 tag as the parser may be unexpectedly broken.)
 
 
 -----------------------------------------------------------------------------------
 Python port notes
------------------
+
 
 Currently only Py3k+ is explicitly supported and tested. If you require Python 2.7
 support and the library as it stands does not work with 2.7, please file a proposal
