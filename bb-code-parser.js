@@ -709,7 +709,7 @@
         this.hasNextToken = function(delimiter) {
             if(delimiter === undefined) delimiter = ' ';
             return input.indexOf(delimiter, Math.min(length, position)) !== -1;
-        }
+        };
 
         this.nextToken = function(delimiter) {
             if(delimiter === undefined) delimiter = ' ';
@@ -723,15 +723,15 @@
                 index = length;
             }
 
-            var result = input.substr(position, index - position);
+            var result = input.substring(position, index);
             position = index + 1;
 
             return result;
-        }
+        };
 
         this.reset = function() {
             position = 0;
-        }
+        };
 
     }
 
