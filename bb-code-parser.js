@@ -520,7 +520,6 @@
                     }
                 }
 
-                // Empty the stack
                 stack = [];
 
                 // Final loop to print out all the open/close tags as appropriate
@@ -532,7 +531,6 @@
                         parent = state__findStartCodeWithStatus(queue, BBCodeParser_Token.VALID, i);
                         output += (!escapeContentOutput)? token.content : (parent === -1 || !BBCodeParser.isValidKey(codes, queue[parent].content))? codes['GLOBAL'].escape(settings, token.content) : codes[queue[parent].content].escape(settings, token.content);
 
-                    // Handle start codes
                     } else if(token.type === BBCodeParser_Token.CODE_START) {
                         parent = null;
 
@@ -572,7 +570,6 @@
                         if(token.status === BBCodeParser_Token.VALID) {
                             output += codes[token.content].open(settings, token.argument);
 
-                            // Store all open codes
                             if(handleOverlappingCodes) stack.push(token);
                         } else if(token.argument !== null) {
                             output += codeStartSymbol + token.content + '=' + token.argument + codeEndSymbol;
@@ -580,7 +577,6 @@
                             output += codeStartSymbol + token.content + codeEndSymbol;
                         }
 
-                    // Handle end codes
                     } else if(token.type === BBCodeParser_Token.CODE_END) {
 
                         if(token.status === BBCodeParser_Token.VALID) {

@@ -502,7 +502,6 @@ class BBCodeParser:
                 if all_or_nothing and token.status == Token.INVALID:
                     return finput
 
-            # Empty the stack
             stack = []
 
             # Final loop to print out all the open/close tags as appropriate
@@ -521,7 +520,6 @@ class BBCodeParser:
                     else:
                         output += codes[queue[parent].content].escape(settings, token.content)
 
-                # Handle start codes
                 elif token.ttype == Token.CODE_START:
                     parent = None
 
@@ -540,7 +538,6 @@ class BBCodeParser:
                             if token.status:
                                 queue[token.matches].status = Token.INVALID
 
-                            # all_or_nothing, return input
                             if all_or_nothing:
                                 return finput
 
@@ -567,7 +564,6 @@ class BBCodeParser:
                     else:
                         output += code_start_symbol.token.content.code_end_symbol
 
-                # Handle end codes
                 elif token.ttype == Token.CODE_END:
 
                     if token.status == Token.VALID:
