@@ -1,0 +1,16 @@
+{
+    "name": "bbcodeparser/bbcodeparser",
+    "description": "BB-Code Parsing Library",
+    "keywords": ["bbc","bbcode"],
+    "homepage": "https://bitbucket.org/AMcBain/bb-code-parser",
+    "type": "library",
+    "license": "BSD (3-Clause)",
+    "authors": [
+        {
+            "name": "A.McBain"
+        }
+    ],
+    "autoload": {
+        "files": ["bb-code-parser.php"]
+    }
+}
